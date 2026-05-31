@@ -75,9 +75,13 @@ export function renderTranslatePanel() {
     const tmp = sourceLang.value;
     sourceLang.value = targetLang.value;
     targetLang.value = tmp;
-    input.value = '';
-    result.innerHTML = '<span class="text-body-secondary">Traducción</span>';
-    chars.textContent = '0 caracteres';
+    
+    const translatedText = result.innerText.trim();
+    if (translatedText && !result.querySelector('.spinner-border') && translatedText !== 'Traducción' && !translatedText.startsWith('Error:')) {
+      input.value = translatedText;
+    }
+    
+    input.dispatchEvent(new Event('input'));
   });
 
   sourceLang.addEventListener('change', () => {

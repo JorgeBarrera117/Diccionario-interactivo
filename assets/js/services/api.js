@@ -13,11 +13,20 @@ export async function fetchJson(url, options = {}) {
     let msg = `Error ${res.status}`;
     try {
       const err = await res.json();
-      msg = err.detail || err.message || msg;
-    } catch {}
+      msg = err.detail || err.message || err.title || msg;
+    } catch {
+      try {
+        const textErr = await res.text();
+        if (textErr) msg = `${msg}: ${textErr.slice(0, 100)}`;
+      } catch {}
+    }
     throw new Error(msg);
   }
-  return res.json();
+  try {
+    return await res.json();
+  } catch (err) {
+    throw new Error('Respuesta inválida del servidor (no es JSON válido).');
+  }
 }
 
 export async function fetchWithProxy(apiUrl) {

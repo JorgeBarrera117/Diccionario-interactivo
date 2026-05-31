@@ -39,57 +39,49 @@ export function getDailyWord(lang) {
   return list[diff % list.length];
 }
 
-async function wikiPageImage(url) {
-  try {
-    const data = await fetchJson(url);
-    const pages = data?.query?.pages;
-    if (!pages) return null;
-    for (const p of Object.values(pages)) {
-      if (p?.thumbnail?.source) return p.thumbnail.source;
-    }
-    return null;
-  } catch {
-    return null;
-  }
+function keyTerms(word, context) {
+  if (!context || context === word) return word;
+  const stopWords = new Set([
+    'the','a','an','in','on','at','to','of','for','by','with','from','as','into','through',
+    'during','before','after','above','below','between','and','or','but','is','are','was',
+    'were','be','been','being','have','has','had','do','does','did','will','would','can',
+    'could','shall','should','may','might','it','its','this','that','these','those','i',
+    'you','he','she','we','they','me','him','her','them','my','your','his','its','our',
+    'their','not','no','nor','so','very','just','also','if','then','than','because',
+    'about','which','who','whom','what','when','where','how','some','any','all','each',
+    'every','both','few','more','most','other','such','only','own','same','too','up','down',
+    'out','off','over','under','again','further','once','here','there',
+    'el','la','los','las','un','una','unos','unas','en','de','del','para','por','con','sin',
+    'es','son','era','ser','estar','está','están','tener','tiene','haber','ha','han',
+    'y','o','pero','como','que','se','su','sus','lo','le','no','más','muy',
+  ]);
+  const combined = word + ' ' + context;
+  const terms = combined
+    .toLowerCase()
+    .replace(/[^a-záéíóúüñ ]/g, '')
+    .split(/\s+/)
+    .filter(t => t.length > 3 && !stopWords.has(t));
+  return [...new Set(terms)].slice(0, 4).join(' ');
 }
 
-async function commonsImage(word) {
-  const url = `https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrsearch=${encodeURIComponent(word)}&gsrnamespace=6&prop=imageinfo&iiprop=url&iiurlwidth=400&format=json&origin=*&gsrlimit=3`;
-  try {
-    const data = await fetchJson(url);
-    const pages = data?.query?.pages;
-    if (!pages) return null;
-    for (const p of Object.values(pages)) {
-      if (p?.imageinfo?.[0]?.thumburl) return p.imageinfo[0].thumburl;
-      if (p?.imageinfo?.[0]?.url) return p.imageinfo[0].url;
-    }
-    return null;
-  } catch {
-    return null;
-  }
-}
-
-export async function fetchImage(word, lang) {
-  const wikiLang = LANG_CODES[lang] || 'en';
+export async function fetchImage(word, context) {
+  const query = keyTerms(word, context) || word;
   const enc = encodeURIComponent;
 
-  // 1) Exact Wikipedia page
-  let img = await wikiPageImage(
-    `https://${wikiLang}.wikipedia.org/w/api.php?action=query&titles=${enc(word)}&prop=pageimages&format=json&pithumbsize=400&origin=*`
-  );
-  if (img) return img;
+  try {
+    const data = await fetchJson(
+      `https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrsearch=${enc(query)}&gsrnamespace=6&prop=imageinfo&iiprop=url&iiurlwidth=400&format=json&origin=*&gsrlimit=5`
+    );
+    const pages = data?.query?.pages;
+    if (pages) {
+      for (const p of Object.values(pages)) {
+        if (p?.imageinfo?.[0]?.thumburl) return p.imageinfo[0].thumburl;
+        if (p?.imageinfo?.[0]?.url) return p.imageinfo[0].url;
+      }
+    }
+  } catch {}
 
-  // 2) Wikipedia search (related pages)
-  img = await wikiPageImage(
-    `https://${wikiLang}.wikipedia.org/w/api.php?action=query&generator=search&gsrsearch=${enc(word)}&prop=pageimages&format=json&pithumbsize=400&origin=*&gsrlimit=3`
-  );
-  if (img) return img;
-
-  // 3) Wikimedia Commons search
-  img = await commonsImage(word);
-  if (img) return img;
-
-  return null;
+  return `https://image.pollinations.ai/prompt/${enc(query)}?width=400&height=300&nologo=true`;
 }
 
 export async function fetchDictionary(word, lang) {

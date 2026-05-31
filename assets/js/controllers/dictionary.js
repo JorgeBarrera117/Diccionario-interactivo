@@ -20,10 +20,9 @@ export async function searchWord(word) {
   addHistory(word);
 
   try {
-    const [entry, imgUrl] = await Promise.all([
-      fetchDictionary(word, lang),
-      fetchImage(word, lang),
-    ]);
+    const entry = await fetchDictionary(word, lang);
+    const context = entry?.meanings?.[0]?.definitions?.[0]?.definition || word;
+    const imgUrl = await fetchImage(word, context);
     hideLoading();
     renderWordResult(entry, getState().favorites.includes(entry?.word ?? ''), lang, imgUrl);
   } catch (err) {

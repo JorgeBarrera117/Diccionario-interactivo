@@ -3,6 +3,8 @@ const state = {
   history: JSON.parse(localStorage.getItem('history') || '[]'),
   theme: localStorage.getItem('theme') || 'light',
   language: localStorage.getItem('language') || 'en',
+  unsplashKey: localStorage.getItem('unsplashKey') || '',
+  wolframKey: localStorage.getItem('wolframKey') || '',
 };
 
 const listeners = [];
@@ -70,4 +72,12 @@ export function setLanguage(lang) {
   state.language = lang;
   localStorage.setItem('language', lang);
   notify();
+}
+
+export function setConfig(key, value) {
+  if (key in state) {
+    state[key] = value;
+    localStorage.setItem(key, value);
+    notify();
+  }
 }

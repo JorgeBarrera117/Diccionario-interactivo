@@ -473,7 +473,7 @@ export function getSuggestions(query, lang) {
     const normalized = word.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
     if (normalized.startsWith(q)) {
       matches.push(word);
-      if (matches.length >= 10) break;
+      if (matches.length >= 20) break;
     }
   }
   return matches;

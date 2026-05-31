@@ -4,6 +4,7 @@ import { initTheme, handleToggleTheme } from './controllers/theme.js';
 import { updateSidebars } from './views/sidebar.js';
 import { renderTranslatePanel } from './views/translate.js';
 import { renderFavorites } from './views/favorites.js';
+import { renderMathPanel } from './views/math.js';
 import { initAutocomplete } from './views/autocomplete.js';
 
 let currentSection = 'dictionary';
@@ -13,9 +14,21 @@ async function setActiveSection(section) {
   document.querySelectorAll('.section-tab').forEach(tab => {
     tab.classList.toggle('active', tab.dataset.section === section);
   });
-  document.getElementById('dictionarySection').classList.toggle('d-none', section !== 'dictionary');
-  document.getElementById('translateSection').classList.toggle('d-none', section !== 'translate');
-  document.getElementById('favoritesSection').classList.toggle('d-none', section !== 'favorites');
+  const sections = ['dictionary', 'translate', 'favorites', 'math'];
+  sections.forEach(s => {
+    const el = document.getElementById(s + 'Section');
+    if (s === section) {
+      el.classList.remove('d-none');
+      el.classList.add('fade-section');
+      // Reiniciar animación
+      el.style.animation = 'none';
+      el.offsetHeight; /* trigger reflow */
+      el.style.animation = null; 
+    } else {
+      el.classList.add('d-none');
+      el.classList.remove('fade-section');
+    }
+  });
   if (section === 'favorites') await renderFavorites(getState());
 }
 
@@ -161,6 +174,7 @@ function setupEventListeners(offcanvas) {
       return;
     }
   });
+
 }
 
 function init() {
@@ -182,6 +196,7 @@ function init() {
 
   loadWordOfDay();
   renderTranslatePanel();
+  renderMathPanel();
   updateSidebars(getState());
 }
 
