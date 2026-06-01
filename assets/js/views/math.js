@@ -598,8 +598,8 @@ function renderWolframSteps(stepsPod, stepsContent, plotUrl) {
 async function doAlgebra() {
   const mf = document.getElementById('algMathField');
   if (!mf) return;
-  const latexInput = mf.getValue();
-  const asciiInput = mf.getValue('ascii-math') || parseLatexToAsciiMath(latexInput);
+  const latexInput = mf.value || '';
+  const asciiInput = mf.tagName && mf.tagName.toLowerCase() === 'input' ? mf.value : (mf.getValue ? mf.getValue('ascii-math') || parseLatexToAsciiMath(mf.getValue()) : mf.value);
   
   const mode = document.getElementById('algMode').value;
   const result = document.getElementById('algResult');
@@ -716,7 +716,19 @@ function insertMathSymbol(symbol) {
   if (!mfId) return;
   const mf = document.getElementById(mfId);
   if (!mf) return;
-  const map = {
+  const map = (mf.tagName && mf.tagName.toLowerCase() === 'input') ? {
+    'sqrt': 'sqrt(', 'square': '^2', 'cube': '^3', 'power': '^',
+    'frac': '/', 'pi': 'pi', 'infty': 'Infinity', 'pm': '+-',
+    'cdot': '*', 'alpha': 'alpha', 'beta': 'beta', 'theta': 'theta',
+    'delta': 'delta', 'gamma': 'gamma', 'lambda': 'lambda', 'sigma': 'sigma',
+    'sum': 'sum(', 'int': 'integrate(', 'prod': 'product(', 'lim': 'limit(',
+    'sin': 'sin(', 'cos': 'cos(', 'tan': 'tan(', 'log': 'log(', 'ln': 'ln(',
+    'lparen': '(', 'rparen': ')', 'lbracket': '[', 'rbracket': ']',
+    'lbrace': '{', 'rbrace': '}', 'equal': '=',
+    'plus': '+', 'minus': '-', 'times': '*', 'divide': '/',
+    'abs': 'abs(', 'binom': 'binom(', 'vector': 'vec(',
+    'hat': 'hat(', 'bar': 'bar(', 'prime': "'",
+  } : {
     'sqrt': '\\sqrt{}', 'square': '^{2}', 'cube': '^{3}', 'power': '^{}',
     'frac': '\\frac{}{}', 'pi': '\\pi', 'infty': '\\infty', 'pm': '\\pm',
     'cdot': '\\cdot', 'alpha': '\\alpha', 'beta': '\\beta', 'theta': '\\theta',
@@ -731,6 +743,16 @@ function insertMathSymbol(symbol) {
   };
   const ins = map[symbol] || symbol;
   mf.focus();
+  
+  if (mf.tagName && mf.tagName.toLowerCase() === 'input') {
+    const start = mf.selectionStart || 0;
+    const end = mf.selectionEnd || 0;
+    const val = mf.value || '';
+    mf.value = val.substring(0, start) + ins + val.substring(end);
+    mf.selectionStart = mf.selectionEnd = start + ins.length;
+    return;
+  }
+
   if (symbol === 'frac') {
     mf.executeCommand(['insert', '\\frac{#0}{#?}', {focus: true}]);
   } else if (symbol === 'sqrt') {
@@ -1762,8 +1784,7 @@ export function renderMathPanel() {
           <div class="mb-4">
             <div style="position: relative; width: 100%;">
               <div style="font-size: 0.75rem; color: var(--primary-color); position: absolute; top: -10px; left: 12px; background: var(--md-sys-color-surface, #FFFBFE); padding: 0 4px; z-index: 2;">Expresión algebraica</div>
-              <math-field id="algMathField" math-virtual-keyboard-policy="manual" style="font-size: 1.5rem; width: 100%; border-radius: 8px; border: 2px solid var(--primary-color); padding: 0.75rem 1rem; background: transparent; color: var(--md-sys-color-on-surface, #1C1B1F); outline: none;">
-              </math-field>
+              <input type="text" id="algMathField" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" style="font-size: 1.5rem; width: 100%; border-radius: 8px; border: 2px solid var(--primary-color); padding: 0.75rem 1rem; background: transparent; color: var(--md-sys-color-on-surface, #1C1B1F); outline: none;">
             </div>
           </div>
 
@@ -1785,7 +1806,7 @@ export function renderMathPanel() {
           <div class="input-group mb-3 d-flex flex-column flex-md-row gap-3 align-items-stretch">
             <div style="flex: 1; position: relative; width: 100%;">
               <div style="font-size: 0.75rem; color: var(--primary-color); position: absolute; top: -10px; left: 12px; background: var(--md-sys-color-surface, #FFFBFE); padding: 0 4px; z-index: 2;">Escribe una función (ej. x², sin(x), x³−2x)</div>
-              <math-field id="graphInput" math-virtual-keyboard-policy="manual" style="font-size: 1.25rem; width: 100%; border-radius: 8px; border: 2px solid var(--primary-color); padding: 0.75rem 1rem; background: transparent; color: var(--md-sys-color-on-surface, #1C1B1F); outline: none;">x^2</math-field>
+              <input type="text" id="graphInput" value="x^2" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" style="font-size: 1.25rem; width: 100%; border-radius: 8px; border: 2px solid var(--primary-color); padding: 0.75rem 1rem; background: transparent; color: var(--md-sys-color-on-surface, #1C1B1F); outline: none;">
             </div>
             <button class="m3-math-btn m3-math-btn-pill m3-math-action-primary m-0" id="graphBtn" style="height: auto; min-height: 56px;"><span class="material-symbols-rounded me-2">show_chart</span>Graficar</button>
           </div>
