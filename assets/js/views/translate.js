@@ -3,7 +3,6 @@ import { translateText } from '../services/external.js';
 let debounceTimer = null;
 
 const LANGUAGES = [
-  { code: 'auto', name: 'Detectar idioma', emoji: '✨' },
   { code: 'en', name: 'Inglés', emoji: '🇺🇸' },
   { code: 'es', name: 'Español', emoji: '🇪🇸' },
   { code: 'fr', name: 'Francés', emoji: '🇫🇷' },
@@ -51,12 +50,6 @@ export function renderTranslatePanel() {
             <div class="translate-action-bar">
               <span id="translateChars" style="font-size: 0.75rem; color: var(--md-sys-color-on-surface-variant, #49454F);">0 / 5000</span>
               <div class="d-flex gap-1">
-                <button class="btn btn-icon btn-sm" id="btnMic" title="Entrada por voz">
-                  <span class="material-symbols-rounded">mic</span>
-                </button>
-                <button class="btn btn-icon btn-sm" id="btnCam" title="Subir imagen (OCR)">
-                  <span class="material-symbols-rounded">photo_camera</span>
-                </button>
                 <button class="btn btn-icon btn-sm d-none" id="btnClear" title="Limpiar texto">
                   <span class="material-symbols-rounded">close</span>
                 </button>
@@ -88,9 +81,6 @@ export function renderTranslatePanel() {
                 <button class="btn btn-icon btn-sm position-relative" id="btnCopy" title="Copiar al portapapeles">
                   <span class="material-symbols-rounded">content_copy</span>
                   <span class="badge bg-secondary position-absolute d-none" id="copyTooltip" style="top: -25px; left: 50%; transform: translateX(-50%);">Copiado</span>
-                </button>
-                <button class="btn btn-icon btn-sm" id="btnAudio" title="Escuchar pronunciación">
-                  <span class="material-symbols-rounded">volume_up</span>
                 </button>
                 <button class="btn btn-icon btn-sm" id="btnFav" title="Guardar en favoritos">
                   <span class="material-symbols-rounded">star</span>
@@ -132,7 +122,7 @@ export function renderTranslatePanel() {
   const swapBtn = document.getElementById('swapLangBtn');
   const btnClear = document.getElementById('btnClear');
   
-  let sourceLangVal = 'auto';
+  let sourceLangVal = 'en';
   let targetLangVal = 'es';
 
   function checkSwapBtn() {
@@ -183,21 +173,12 @@ export function renderTranslatePanel() {
     input.value = '';
     input.dispatchEvent(new Event('input'));
   });
-  
-  document.getElementById('btnMic').addEventListener('click', () => alert("Función de reconocimiento de voz en desarrollo..."));
-  document.getElementById('btnCam').addEventListener('click', () => alert("Función de OCR de imágenes en desarrollo..."));
-  
   document.getElementById('btnCopy').addEventListener('click', () => {
     if (!output.innerText) return;
     navigator.clipboard.writeText(output.innerText);
     const tooltip = document.getElementById('copyTooltip');
     tooltip.classList.remove('d-none');
     setTimeout(() => tooltip.classList.add('d-none'), 2000);
-  });
-  
-  document.getElementById('btnAudio').addEventListener('click', () => {
-    if (!output.innerText) return;
-    alert("Función de lectura (Text-to-Speech) en desarrollo...");
   });
   
   const btnFav = document.getElementById('btnFav');

@@ -35,6 +35,9 @@ async function setActiveSection(section) {
 const LANG_NAMES = {
   en: 'English', es: 'Español', fr: 'Français', de: 'Deutsch', it: 'Italiano', pt: 'Português',
 };
+const LANG_CHIP_NAMES = {
+  en: '🇺🇸 EN', es: '🇪🇸 ES', fr: '🇫🇷 FR', de: '🇩🇪 DE', it: '🇮🇹 IT', pt: '🇵🇹 PT',
+};
 const LANG_PLACEHOLDERS = {
   en: 'Search for a word in English...',
   es: 'Buscar una palabra en español...',
@@ -69,12 +72,7 @@ function capitalize(s) {
 
 function updateLangUI(lang) {
   const label = document.getElementById('currentLangLabel');
-  if (label) label.textContent = LANG_NAMES[lang] || lang;
-
-  document.querySelectorAll('.lang-check').forEach(el => {
-    const expectedId = 'check' + capitalize(lang);
-    el.style.display = el.id === expectedId ? '' : 'none';
-  });
+  if (label) label.textContent = LANG_CHIP_NAMES[lang] || lang;
 
   const input = document.querySelector('[name="word"]');
   if (input) input.placeholder = LANG_PLACEHOLDERS[lang] || 'Search a word...';
@@ -119,10 +117,24 @@ function setupEventListeners(offcanvas) {
     });
   });
 
-  document.getElementById('searchForm').addEventListener('submit', function (e) {
+  const searchForm = document.getElementById('searchForm');
+  const searchInput = searchForm.querySelector('[name="word"]');
+  
+  searchForm.addEventListener('submit', function (e) {
     e.preventDefault();
-    const word = this.querySelector('[name="word"]').value.trim();
-    if (word) searchWord(word);
+    const word = searchInput.value.trim();
+    if (word) {
+      searchWord(word);
+    }
+  });
+
+  searchInput.addEventListener('input', function (e) {
+    const word = this.value.trim();
+    if (word.length === 0) {
+      document.getElementById('resultSection').innerHTML = '';
+      document.getElementById('errorSection').classList.add('d-none');
+      document.getElementById('emptyState').classList.remove('d-none');
+    }
   });
 
   document.addEventListener('click', function (e) {

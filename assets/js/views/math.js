@@ -1362,7 +1362,15 @@ function renderPhysicsPanel() {
         <textarea class="form-control" id="physTextInput" rows="3" style="background: var(--md-sys-color-surface, #FFFBFE); border: 1px solid var(--md-sys-color-outline, #79747E); border-radius: 8px; padding: 12px; font-style: italic; color: var(--md-sys-color-on-surface, #1C1B1F);" onfocus="this.style.border='2px solid var(--primary-color)'; this.style.outline='none';" onblur="this.style.border='1px solid var(--md-sys-color-outline, #79747E)';" placeholder="Ej: Un auto parte del reposo y acelera a 4 m/s2 durante 10 segundos, calcula la velocidad final..."></textarea>
       </div>
       
-      <div class="d-flex justify-content-end">
+      <div class="d-flex justify-content-between align-items-center mt-2">
+        <div class="d-flex gap-2">
+          <button type="button" class="btn m3-filter-chip d-flex align-items-center justify-content-center px-3" style="height: 36px; border-radius: 8px; font-family: 'Times New Roman', serif; font-size: 16px; border: 1px solid #C4B7E8; color: var(--primary-color); background: var(--md-sys-color-surface, #FFFBFE);" onclick="const t = document.getElementById('physTextInput'); t.setRangeText('²', t.selectionStart, t.selectionEnd, 'end'); t.focus();" title="Insertar al cuadrado">
+            <i>x²</i>
+          </button>
+          <button type="button" class="btn m3-filter-chip d-flex align-items-center justify-content-center px-3" style="height: 36px; border-radius: 8px; font-family: 'Times New Roman', serif; font-size: 16px; border: 1px solid #C4B7E8; color: var(--primary-color); background: var(--md-sys-color-surface, #FFFBFE);" onclick="const t = document.getElementById('physTextInput'); t.setRangeText('/', t.selectionStart, t.selectionEnd, 'end'); t.focus();" title="Insertar fracción">
+            <i>a/b</i>
+          </button>
+        </div>
         <button class="btn m3-math-action-primary" id="physNlpBtn" style="border-radius: 24px; padding: 10px 24px; font-weight: 500; display: inline-flex; align-items: center; gap: 8px;">
           <span class="material-symbols-rounded" style="font-size: 1.2rem;">magic_button</span> Autocompletar y Resolver
         </button>
