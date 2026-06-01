@@ -5,7 +5,8 @@ let currentTab = 'calc';
 
 const PHYSICS = [
   { 
-    name: 'Cinemática: Velocidad final (MRUV)', 
+    name: 'Velocidad final (MRUV)', 
+    category: 'Cinemática',
     vars: { v: 'Velocidad final (m/s)', u: 'Velocidad inicial (m/s)', a: 'Aceleración (m/s²)', t: 'Tiempo (s)' },
     formula: 'v = u + a \\cdot t',
     solve: {
@@ -16,7 +17,8 @@ const PHYSICS = [
     }
   },
   { 
-    name: 'Cinemática: Distancia (MRUV)', 
+    name: 'Distancia (MRUV)', 
+    category: 'Cinemática',
     vars: { s: 'Distancia (m)', u: 'Vel. inicial (m/s)', t: 'Tiempo (s)', a: 'Aceleración (m/s²)' },
     formula: 's = u \\cdot t + \\frac{1}{2} a \\cdot t^2',
     solve: {
@@ -27,6 +29,7 @@ const PHYSICS = [
   },
   { 
     name: 'Segunda ley Newton', 
+    category: 'Dinámica',
     vars: { F: 'Fuerza (N)', m: 'Masa (kg)', a: 'Aceleración (m/s²)' },
     formula: 'F = m \\cdot a',
     solve: {
@@ -37,6 +40,7 @@ const PHYSICS = [
   },
   { 
     name: 'Energía cinética', 
+    category: 'Energía',
     vars: { KE: 'Energía (J)', m: 'Masa (kg)', v: 'Velocidad (m/s)' },
     formula: 'KE = \\frac{1}{2} m \\cdot v^2',
     solve: {
@@ -47,6 +51,7 @@ const PHYSICS = [
   },
   { 
     name: 'Energía potencial gravitatoria', 
+    category: 'Energía',
     vars: { PE: 'Energía (J)', m: 'Masa (kg)', h: 'Altura (m)', g: 'Gravedad (m/s²)' },
     formula: 'PE = m \\cdot g \\cdot h',
     solve: {
@@ -58,6 +63,7 @@ const PHYSICS = [
   },
   { 
     name: 'Ley de Ohm', 
+    category: 'Electricidad',
     vars: { V: 'Voltaje (V)', I: 'Corriente (A)', R: 'Resistencia (Ω)' },
     formula: 'V = I \\cdot R',
     solve: {
@@ -68,6 +74,7 @@ const PHYSICS = [
   },
   { 
     name: 'Trabajo mecánico', 
+    category: 'Energía',
     vars: { W: 'Trabajo (J)', F: 'Fuerza (N)', d: 'Distancia (m)' },
     formula: 'W = F \\cdot d',
     solve: {
@@ -78,6 +85,7 @@ const PHYSICS = [
   },
   { 
     name: 'Densidad', 
+    category: 'Propiedades',
     vars: { rho: 'Densidad (kg/m³)', m: 'Masa (kg)', v: 'Volumen (m³)' },
     formula: '\\rho = \\frac{m}{v}',
     solve: {
@@ -88,6 +96,7 @@ const PHYSICS = [
   },
   { 
     name: 'Teorema de Pitágoras', 
+    category: 'Geometría',
     vars: { c: 'Hipotenusa', a: 'Cateto a', b: 'Cateto b' },
     formula: 'c^2 = a^2 + b^2',
     solve: {
@@ -881,7 +890,7 @@ function drawGraphCanvas(canvas, exprInput) {
   const originY = ((yMax - 0) / (yMax - yMin)) * H;
 
   // Grid & Axes
-  ctx.strokeStyle = 'var(--bs-border-color, #e0e0e0)'; 
+  ctx.strokeStyle = 'var(--md-sys-color-surface-container-highest, #E6E0E9)'; 
   ctx.lineWidth = 0.5;
   for (let i = xMin; i <= xMax; i++) { 
     const x = ((i - xMin) / (xMax - xMin)) * W; 
@@ -891,7 +900,7 @@ function drawGraphCanvas(canvas, exprInput) {
     const y = ((yMax - i) / (yMax - yMin)) * H; 
     ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); 
   }
-  ctx.strokeStyle = 'var(--bs-body-color, #212529)'; 
+  ctx.strokeStyle = 'var(--md-sys-color-on-surface-variant, #49454F)'; 
   ctx.lineWidth = 1.5;
   ctx.beginPath(); ctx.moveTo(originX, 0); ctx.lineTo(originX, H); ctx.stroke(); 
   ctx.beginPath(); ctx.moveTo(0, originY); ctx.lineTo(W, originY); ctx.stroke(); 
@@ -899,8 +908,8 @@ function drawGraphCanvas(canvas, exprInput) {
   // Ticks
   const xTick = (xMax - xMin) > 60 ? 10 : (xMax - xMin) > 30 ? 5 : 2;
   const yTick = (yMax - yMin) > 60 ? 10 : (yMax - yMin) > 30 ? 5 : 2;
-  ctx.font = '12px Inter, sans-serif';
-  ctx.fillStyle = 'var(--bs-secondary-color, #6c757d)';
+  ctx.font = '11px Inter, sans-serif'; // Label Small
+  ctx.fillStyle = 'var(--md-sys-color-on-surface-variant, #49454F)';
   ctx.textAlign = 'center'; ctx.textBaseline = 'top';
   for (let i = Math.ceil(xMin); i <= xMax; i++) { 
     if (i !== 0 && i % xTick === 0) {
@@ -921,7 +930,7 @@ function drawGraphCanvas(canvas, exprInput) {
   ctx.fillText('0', originX - 6, originY + 6);
 
   // Drawing Loop
-  const colors = ['#6366f1', '#ef4444', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899'];
+  const colors = ['var(--primary-color)', '#006A6A', '#B3261E', '#625B71']; // primary, tertiary, error, secondary
   let colorIdx = 0;
   
   for (const item of parsed) {
@@ -1032,7 +1041,7 @@ function drawGraphCanvas(canvas, exprInput) {
   }
 
   // Intercept Dots (solo para explícitas para compatibilidad con la versión anterior)
-  ctx.fillStyle = 'red';
+  ctx.fillStyle = 'var(--md-sys-color-error, #B3261E)';
   for (const pt of uniqueInts) {
     const sx = ((pt.x - xMin) / (xMax - xMin)) * W;
     const sy = ((yMax - pt.y) / (yMax - yMin)) * H;
@@ -1047,19 +1056,25 @@ function drawGraphCanvas(canvas, exprInput) {
       const tX = pt.x === 0 ? sx + 8 : sx;
       const tY = pt.x === 0 ? sy : sy - 8;
       ctx.fillText(`(${Number.isInteger(pt.x) ? pt.x : parseFloat(pt.x.toFixed(2))}, ${Number.isInteger(pt.y) ? pt.y : parseFloat(pt.y.toFixed(2))})`, tX, tY);
-      ctx.fillStyle = 'red';
+      ctx.fillStyle = 'var(--md-sys-color-error, #B3261E)';
     }
   }
 }
 
 function doPhysics() {
   const sel = document.getElementById('physSelect');
-  const idx = sel.selectedIndex;
+  // Need to extract the actual value which might be within optgroups
+  const idx = sel.value;
   const p = PHYSICS[idx];
   const inputs = document.querySelectorAll('.phys-input');
   const vals = {};
   let missing = [], filled = 0;
+  
+  // Reset all inputs styling first
   inputs.forEach(inp => {
+    inp.style.backgroundColor = 'transparent';
+    inp.style.borderColor = 'var(--md-sys-color-outline, #79747E)';
+    inp.style.borderWidth = '1px';
     const v = inp.value.trim();
     if (v === '') { missing.push(inp.dataset.var); }
     else { vals[inp.dataset.var] = parseFloat(v); filled++; }
@@ -1067,66 +1082,108 @@ function doPhysics() {
   
   const resultDiv = document.getElementById('physResult');
   const stepsDiv = document.getElementById('physSteps');
+  const emptyState = document.getElementById('physEmptyState');
+  const resultContainer = document.getElementById('physResultContainer');
 
   if (missing.length === 0) {
-    resultDiv.textContent = 'Deja vacío el valor que quieres calcular';
-    resultDiv.className = 'math-result-display text-danger';
-    if(stepsDiv) stepsDiv.classList.add('d-none');
+    emptyState.classList.add('d-none');
+    resultContainer.classList.remove('d-none');
+    resultDiv.innerHTML = `<span class="text-danger"><span class="material-symbols-rounded align-middle me-1">error</span> Deja vacío el valor que quieres calcular</span>`;
+    resultDiv.className = 'm3-physics-result-display fs-5';
+    if(stepsDiv) stepsDiv.innerHTML = '';
     return;
   }
+  
   if (missing.length > 1) {
-    resultDiv.textContent = `Solo debes dejar vacío 1 valor a calcular. Faltan: ${missing.join(', ')}`;
-    resultDiv.className = 'math-result-display text-danger';
-    if(stepsDiv) stepsDiv.classList.add('d-none');
+    emptyState.classList.add('d-none');
+    resultContainer.classList.remove('d-none');
+    resultDiv.innerHTML = `<span class="text-danger"><span class="material-symbols-rounded align-middle me-1">error</span> Solo debes dejar vacío 1 valor a calcular. Faltan: ${missing.join(', ')}</span>`;
+    resultDiv.className = 'm3-physics-result-display fs-5';
+    if(stepsDiv) stepsDiv.innerHTML = '';
     return;
   }
 
   const targetVar = missing[0];
   if (!p.solve[targetVar]) {
-    resultDiv.textContent = `No es posible despejar automáticamente "${p.vars[targetVar]}" con esta fórmula.`;
-    resultDiv.className = 'math-result-display text-danger';
-    if(stepsDiv) stepsDiv.classList.add('d-none');
+    emptyState.classList.add('d-none');
+    resultContainer.classList.remove('d-none');
+    resultDiv.innerHTML = `<span class="text-danger"><span class="material-symbols-rounded align-middle me-1">error</span> No es posible despejar automáticamente "${p.vars[targetVar]}" con esta fórmula.</span>`;
+    resultDiv.className = 'm3-physics-result-display fs-5';
+    if(stepsDiv) stepsDiv.innerHTML = '';
     return;
   }
 
   try {
-    const resolver = p.solve[targetVar];
-    const r = resolver.calc(vals);
-    if (isNaN(r) || !isFinite(r)) throw new Error('Cálculo no válido (posible división por cero)');
+    // loading state
+    const btn = document.getElementById('physBtn');
+    if (btn) {
+      btn.disabled = true;
+      btn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Calculando...`;
+    }
 
-    const formattedResult = typeof r === 'number' && !Number.isInteger(r) ? parseFloat(r.toFixed(6)) : r;
-    resultDiv.textContent = `Resultado: ${targetVar} = ${formattedResult}`;
-    resultDiv.className = 'math-result-display';
+    setTimeout(() => {
+      const resolver = p.solve[targetVar];
+      const r = resolver.calc(vals);
+      if (isNaN(r) || !isFinite(r)) throw new Error('Cálculo no válido (posible división por cero)');
 
-    if (stepsDiv) {
-      let subTex = resolver.tex;
-      for (const [k, val] of Object.entries(vals).sort((x,y) => y[0].length - x[0].length)) {
-        if (val !== undefined && val !== null) {
-          const regex = new RegExp(`(?<![a-zA-Z\\\\\\\\\\\\\\\\])${k}(?![a-zA-Z])`, 'g');
-          subTex = subTex.replace(regex, val);
-        }
+      const formattedResult = typeof r === 'number' && !Number.isInteger(r) ? parseFloat(r.toFixed(6)) : r;
+      
+      emptyState.classList.add('d-none');
+      resultContainer.classList.remove('d-none');
+      
+      const targetInput = document.querySelector(`.phys-input[data-var="${targetVar}"]`);
+      if (targetInput) {
+        targetInput.value = formattedResult;
+        targetInput.style.backgroundColor = 'var(--md-sys-color-secondary-container, #E8DEF8)';
+        targetInput.style.borderColor = 'var(--md-sys-color-secondary, #625B71)';
+        targetInput.style.borderWidth = '2px';
       }
 
-      const stepsData = [
-        { num: 1, title: 'Fórmula original', steps: [{ desc: '', tex: p.formula }] },
-        { num: 2, title: `Despejar ${p.vars[targetVar]}`, steps: [{ desc: 'Fórmula reestructurada:', tex: resolver.tex }] },
-        { num: 3, title: 'Sustitución y cálculo', steps: [
-            { desc: `Valores: ${Object.entries(vals).filter(([k, v]) => v !== undefined).map(([k, v]) => `${k} = ${v}`).join(', ')}`, tex: subTex },
-            { desc: 'Resultado final:', tex: `${targetVar} = ${formattedResult}` }
-        ]}
-      ];
+      resultDiv.innerHTML = `<math-field read-only style="background: transparent; border: none; outline: none; pointer-events: none; margin: 0 auto;">${targetVar} = ${formattedResult}</math-field>`;
+      resultDiv.className = 'm3-physics-result-display';
 
-      stepsDiv.innerHTML = '<h6 class="fw-semibold mb-2 step-section-title"><span class="material-symbols-rounded me-1 text-indigo">format_list_numbered</span>Paso a paso</h6>';
-      const container = document.createElement('div');
-      container.className = 'steps-container';
-      stepsData.forEach(s => container.appendChild(renderStep(s)));
-      stepsDiv.appendChild(container);
-      stepsDiv.classList.remove('d-none');
-    }
+      if (stepsDiv) {
+        let subTex = resolver.tex;
+        for (const [k, val] of Object.entries(vals).sort((x,y) => y[0].length - x[0].length)) {
+          if (val !== undefined && val !== null) {
+            const regex = new RegExp(`(?<![a-zA-Z\\\\\\\\\\\\\\\\])${k}(?![a-zA-Z])`, 'g');
+            subTex = subTex.replace(regex, val);
+          }
+        }
+
+        const stepsData = [
+          { num: 1, title: 'Fórmula original', steps: [{ desc: '', tex: p.formula }] },
+          { num: 2, title: `Despejar ${p.vars[targetVar]}`, steps: [{ desc: 'Fórmula reestructurada:', tex: resolver.tex }] },
+          { num: 3, title: 'Sustitución y cálculo', steps: [
+              { desc: `Valores: ${Object.entries(vals).filter(([k, v]) => v !== undefined).map(([k, v]) => `${k} = ${v}`).join(', ')}`, tex: subTex },
+              { desc: 'Resultado final:', tex: `${targetVar} = ${formattedResult}` }
+          ]}
+        ];
+
+        stepsDiv.innerHTML = '<h6 class="fw-semibold mb-2 step-section-title"><span class="material-symbols-rounded me-1" style="color: var(--primary-color);">format_list_numbered</span>Paso a paso</h6>';
+        const container = document.createElement('div');
+        container.className = 'steps-container';
+        stepsData.forEach(s => container.appendChild(renderStep(s)));
+        stepsDiv.appendChild(container);
+      }
+      
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = `<span class="material-symbols-rounded" style="font-size: 1.2rem;">calculate</span> Calcular`;
+      }
+    }, 300);
   } catch(e) {
-    resultDiv.textContent = 'Error en el cálculo: ' + e.message;
-    resultDiv.className = 'math-result-display text-danger';
-    if(stepsDiv) stepsDiv.classList.add('d-none');
+    emptyState.classList.add('d-none');
+    resultContainer.classList.remove('d-none');
+    resultDiv.innerHTML = `<span class="text-danger"><span class="material-symbols-rounded align-middle me-1">error</span> Error en el cálculo: ${e.message}</span>`;
+    resultDiv.className = 'm3-physics-result-display fs-5';
+    if(stepsDiv) stepsDiv.innerHTML = '';
+    
+    const btn = document.getElementById('physBtn');
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = `<span class="material-symbols-rounded" style="font-size: 1.2rem;">calculate</span> Calcular`;
+    }
   }
 }
 
@@ -1257,36 +1314,111 @@ function handlePhysicsNLP() {
       document.getElementById('physBtn').click();
     }, 50);
   } else {
-    document.getElementById('physResult').textContent = 'No se detectó ninguna fórmula coincidente con los datos dados. Intenta ser más explícito con las unidades (m/s, kg, etc).';
-    document.getElementById('physResult').className = 'math-result-display text-danger';
+    const emptyState = document.getElementById('physEmptyState');
+    const resultContainer = document.getElementById('physResultContainer');
+    const resultDiv = document.getElementById('physResult');
+    
+    if (emptyState) emptyState.classList.add('d-none');
+    if (resultContainer) resultContainer.classList.remove('d-none');
+    
+    resultDiv.innerHTML = `<span class="text-danger"><span class="material-symbols-rounded align-middle me-1">error</span> No se detectó ninguna fórmula coincidente con los datos. Intenta ser más explícito.</span>`;
+    resultDiv.className = 'm3-physics-result-display fs-5';
   }
 }
 
 function renderPhysicsPanel() {
+  // Construir las opciones agrupadas por categoría
+  const categories = {};
+  PHYSICS.forEach((p, idx) => {
+    if (!categories[p.category]) categories[p.category] = [];
+    categories[p.category].push({ idx, name: p.name });
+  });
+  
+  let optionsHtml = '';
+  for (const cat in categories) {
+    optionsHtml += `<optgroup label="${cat}" style="color: var(--primary-color); font-weight: 600;">`;
+    categories[cat].forEach(p => {
+      optionsHtml += `<option value="${p.idx}">${p.name}</option>`;
+    });
+    optionsHtml += `</optgroup>`;
+  }
+
+  const initialFormula = PHYSICS[0];
+
   return `
-    <div class="card mb-4 border-primary border-opacity-25 bg-primary bg-opacity-10 shadow-sm">
-      <div class="card-body">
-        <h6 class="fw-bold text-primary mb-2"><span class="material-symbols-rounded me-2">auto_awesome</span>Lector de Problemas Mágico</h6>
-        <p class="text-body-secondary small mb-2">Escribe tu problema de física tal como viene en tu tarea. El sistema extraerá los datos y seleccionará la fórmula por ti.</p>
-        <textarea class="form-control mb-2" id="physTextInput" rows="2" placeholder="Ej: Un auto parte del reposo y acelera a 4 m/s2 durante 10 segundos, calcula la velocidad final..."></textarea>
-        <button class="btn btn-primary btn-sm px-4 fw-semibold rounded-pill" id="physNlpBtn">
-          <i class="bi bi-stars"></i> Autocompletar y Resolver
+    <!-- Lector Mágico -->
+    <div class="m3-card-primary-container p-4 mb-4">
+      <h6 class="fw-bold mb-2" style="color: var(--md-sys-color-on-primary-container, #21005D); font-size: 1.1rem;">
+        <span class="material-symbols-rounded me-2" style="color: var(--primary-color); vertical-align: bottom;">auto_awesome</span>Lector de Problemas Mágico
+      </h6>
+      <p class="small mb-3" style="color: var(--md-sys-color-on-primary-container, #21005D); opacity: 0.8;">
+        Escribe tu problema de física tal como viene en tu tarea. El sistema extraerá los datos y seleccionará la fórmula por ti.
+      </p>
+      
+      <div style="position: relative; width: 100%; margin-bottom: 12px;">
+        <div style="font-size: 0.75rem; color: var(--primary-color); position: absolute; top: -10px; left: 12px; background: var(--md-sys-color-primary-container, #EADDFF); padding: 0 4px; z-index: 2;">
+          Escribe tu problema aquí...
+        </div>
+        <textarea class="form-control" id="physTextInput" rows="3" style="background: var(--md-sys-color-surface, #FFFBFE); border: 1px solid var(--md-sys-color-outline, #79747E); border-radius: 8px; padding: 12px; font-style: italic; color: var(--md-sys-color-on-surface, #1C1B1F);" onfocus="this.style.border='2px solid var(--primary-color)'; this.style.outline='none';" onblur="this.style.border='1px solid var(--md-sys-color-outline, #79747E)';" placeholder="Ej: Un auto parte del reposo y acelera a 4 m/s2 durante 10 segundos, calcula la velocidad final..."></textarea>
+      </div>
+      
+      <div class="d-flex justify-content-end">
+        <button class="btn m3-math-action-primary" id="physNlpBtn" style="border-radius: 24px; padding: 10px 24px; font-weight: 500; display: inline-flex; align-items: center; gap: 8px;">
+          <span class="material-symbols-rounded" style="font-size: 1.2rem;">magic_button</span> Autocompletar y Resolver
         </button>
       </div>
     </div>
-    <div class="mb-3"><label class="form-label fw-medium">Selecciona una fórmula manualmente (o usa la Magia)</label>
-      <select class="form-select" id="physSelect">
-        ${PHYSICS.map((p, i) => `<option value="${i}">${p.name}</option>`).join('')}
-      </select></div>
-    <div class="mb-3"><small class="text-body-secondary">Fórmula: <code id="physFormula">\\(${PHYSICS[0].formula}\\)</code></small></div>
-    <div class="row g-2 mb-3" id="physInputs">
-      ${Object.entries(PHYSICS[0].vars).map(([k, v]) => `
-        <div class="col-sm-6"><label class="form-label small">${v} (<b>${k}</b>)</label><input type="number" class="form-control form-control-sm phys-input" data-var="${k}" placeholder="?" step="any" /></div>
-      `).join('')}
+
+    <!-- Selector de Fórmulas -->
+    <div class="mb-4">
+      <label class="form-label mb-1" style="font-size: 13px; color: var(--md-sys-color-on-surface-variant, #49454F);">¿Qué fórmula necesitas?</label>
+      <div style="position: relative;">
+        <select class="form-select" id="physSelect" style="background-color: var(--md-sys-color-surface-container, #F3EDF7); border: none; border-bottom: 2px solid var(--md-sys-color-on-surface-variant, #49454F); border-radius: 4px 4px 0 0; padding: 12px; font-size: 1rem; color: var(--md-sys-color-on-surface, #1C1B1F); cursor: pointer;">
+          ${optionsHtml}
+        </select>
+      </div>
+      
+      <div class="mt-3 p-3 text-center" style="background: var(--md-sys-color-surface-container-highest, #E6E0E9); border-radius: 12px; position: relative;">
+        <span class="badge" style="position: absolute; top: 12px; left: 12px; background: var(--md-sys-color-secondary-container, #E8DEF8); color: var(--md-sys-color-on-secondary-container, #1D192B); font-weight: 500;" id="physCategoryBadge">${initialFormula.category}</span>
+        <math-field id="physFormulaDisplay" style="font-size: 1.2rem; background: transparent; border: none; outline: none; pointer-events: none; margin-top: 10px;" read-only>${initialFormula.formula}</math-field>
+      </div>
     </div>
-    <button class="btn btn-indigo btn-sm" id="physBtn">Calcular</button>
-    <div id="physSteps" class="d-none mt-3"></div>
-    <div class="math-result-display mt-3" id="physResult"></div>`;
+
+    <!-- Formulario de Variables -->
+    <div class="row g-3 mb-4" id="physInputs">
+      ${Object.entries(initialFormula.vars).map(([k, v]) => {
+        const parts = v.match(/^(.*?)\\s*\\((.*?)\\)$/);
+        const name = parts ? parts[1] : v;
+        const unit = parts ? parts[2] : '';
+        return '<div class="col-12 col-md-6">' +
+          '<div style="position: relative; width: 100%;">' +
+            '<div style="font-size: 0.75rem; color: var(--md-sys-color-on-surface-variant, #49454F); position: absolute; top: -10px; left: 12px; background: var(--md-sys-color-surface, #FFFBFE); padding: 0 4px; z-index: 2;">' + name + ' (' + k + ')</div>' +
+            '<input type="number" class="form-control phys-input" data-var="' + k + '" style="border: 1px solid var(--md-sys-color-outline, #79747E); border-radius: 8px; padding: 12px; padding-right: 48px; background: transparent; color: var(--md-sys-color-on-surface, #1C1B1F);" placeholder="Dejar vacío para calcular" step="any" />' +
+            (unit ? '<span style="position: absolute; right: 16px; top: 12px; color: var(--md-sys-color-on-surface-variant, #49454F); font-size: 0.9rem;">' + unit + '</span>' : '') +
+          '</div>' +
+        '</div>';
+      }).join('')}
+    </div>
+
+    <button class="btn m3-math-action-primary w-100 mb-4" id="physBtn" style="border-radius: 24px; padding: 12px; font-weight: 500; display: inline-flex; justify-content: center; align-items: center; gap: 8px; font-size: 15px;">
+      <span class="material-symbols-rounded" style="font-size: 1.2rem;">calculate</span> Calcular
+    </button>
+
+    <!-- Área de Resultados -->
+    <div id="physResultArea">
+      <!-- Empty State -->
+      <div id="physEmptyState" class="text-center py-5" style="color: var(--md-sys-color-on-surface-variant, #49454F);">
+        <span class="material-symbols-rounded mb-3" style="font-size: 48px; opacity: 0.8;">functions</span>
+        <h6 class="fw-medium mb-1">El resultado aparecerá aquí</h6>
+        <p class="small opacity-75 mb-0">Completa las variables conocidas y presiona Calcular</p>
+      </div>
+      
+      <!-- Result Container -->
+      <div id="physResultContainer" class="m3-card-surface-container p-4 d-none">
+        <div id="physSteps" class="mb-3" style="color: var(--md-sys-color-on-surface, #1C1B1F); font-family: 'Times New Roman', serif; font-size: 1.1rem;"></div>
+        <div class="m3-physics-result-display" id="physResult"></div>
+      </div>
+    </div>`;
 }
 
 const PERIODIC_TABLE = {
@@ -1500,68 +1632,109 @@ function renderChemistryPanel() {
   `;
 }
 
-export function renderMathPanel() {
-  const MATH_TOOLBAR_HTML = `
-          <div class="math-toolbar mb-1">
-            <button class="math-tb-btn" data-insert="sqrt" title="\\sqrt{}"><span class="tb-latex">\\sqrt{}</span></button>
-            <button class="math-tb-btn" data-insert="square" title="^{2}">x<sup>2</sup></button>
-            <button class="math-tb-btn" data-insert="cube" title="^{3}">x<sup>3</sup></button>
-            <button class="math-tb-btn" data-insert="power" title="^{}">x<sup>n</sup></button>
-            <button class="math-tb-btn" data-insert="frac" title="\\frac{}{}"><span class="tb-frac"><span class="tb-frac-n">a</span><span class="tb-frac-bar"></span><span class="tb-frac-d">b</span></span></button>
-            <button class="math-tb-btn" data-insert="binom" title="\\binom{}{}"><span class="tb-frac"><span class="tb-frac-n">n</span><span class="tb-frac-p">(</span><span class="tb-frac-d">k</span></span></button>
-            <button class="math-tb-btn" data-insert="sum" title="\\sum_{}^{}">∑</button>
-            <button class="math-tb-btn" data-insert="int" title="\\int_{}^{}">∫</button>
-            <button class="math-tb-btn" data-insert="lim" title="\\lim_{}">lim</button>
-            <span class="math-tb-sep"></span>
-            <button class="math-tb-btn" data-insert="pi" title="\\pi">π</button>
-            <button class="math-tb-btn" data-insert="infty" title="\\infty">∞</button>
-            <button class="math-tb-btn" data-insert="pm" title="\\pm">±</button>
-            <button class="math-tb-btn" data-insert="cdot" title="\\cdot">·</button>
-            <span class="math-tb-sep"></span>
-            <button class="math-tb-btn fw-bold fst-italic" data-insert="x" title="x">x</button>
-            <button class="math-tb-btn fw-bold fst-italic" data-insert="y" title="y">y</button>
-            <button class="math-tb-btn fw-bold fst-italic" data-insert="z" title="z">z</button>
-          </div>
-          <div class="math-toolbar mb-2">
-            <button class="math-tb-btn" data-insert="sin" title="\\sin{}">sin</button>
-            <button class="math-tb-btn" data-insert="cos" title="\\cos{}">cos</button>
-            <button class="math-tb-btn" data-insert="tan" title="\\tan{}">tan</button>
-            <button class="math-tb-btn" data-insert="log" title="\\log{}">log</button>
-            <button class="math-tb-btn" data-insert="ln" title="\\ln{}">ln</button>
-            <span class="math-tb-sep"></span>
-            <button class="math-tb-btn" data-insert="alpha" title="\\alpha">α</button>
-            <button class="math-tb-btn" data-insert="beta" title="\\beta">β</button>
-            <button class="math-tb-btn" data-insert="theta" title="\\theta">θ</button>
-            <button class="math-tb-btn" data-insert="delta" title="\\delta">δ</button>
-            <button class="math-tb-btn" data-insert="lambda" title="\\lambda">λ</button>
-            <button class="math-tb-btn" data-insert="sigma" title="\\sigma">σ</button>
-            <span class="math-tb-sep"></span>
-            <button class="math-tb-btn" data-insert="lparen" title="(">(</button>
-            <button class="math-tb-btn" data-insert="rparen" title=")">)</button>
-            <button class="math-tb-btn" data-insert="lbracket" title="[">[</button>
-            <button class="math-tb-btn" data-insert="rbracket" title="]">]</button>
-            <button class="math-tb-btn" data-insert="lbrace" title="{">{</button>
-            <button class="math-tb-btn" data-insert="rbrace" title="}">}</button>
-            <button class="math-tb-btn" data-insert="equal" title="=">=</button>
-          </div>`;
+const MATH_TOOLBAR_HTML = `
+    <div class="math-keyboard-container" style="overflow-x: auto; white-space: nowrap; padding-bottom: 8px;">
+      <!-- Grupo A: Estructuras -->
+      <div class="d-inline-flex flex-column align-items-center me-2">
+        <div class="d-flex">
+          <button class="m3-math-btn m3-math-group-a math-tb-btn" data-insert="square" title="x²">x²</button>
+          <button class="m3-math-btn m3-math-group-a math-tb-btn" data-insert="cube" title="x³">x³</button>
+          <button class="m3-math-btn m3-math-group-a math-tb-btn" data-insert="power" title="xⁿ">xⁿ</button>
+        </div>
+        <div class="d-flex">
+          <button class="m3-math-btn m3-math-group-a math-tb-btn" data-insert="frac" title="a/b">a/b</button>
+          <button class="m3-math-btn m3-math-group-a math-tb-btn" data-insert="sqrt" title="√">√</button>
+          <button class="m3-math-btn m3-math-group-a math-tb-btn" data-insert="binom" title="binom">C(n,k)</button>
+        </div>
+      </div>
+      
+      <!-- Grupo B: Operadores -->
+      <div class="d-inline-flex flex-column align-items-center me-2">
+        <div class="d-flex">
+          <button class="m3-math-btn m3-math-group-b math-tb-btn" data-insert="sum" title="Σ">Σ</button>
+          <button class="m3-math-btn m3-math-group-b math-tb-btn" data-insert="int" title="∫">∫</button>
+          <button class="m3-math-btn m3-math-group-b math-tb-btn" data-insert="lim" title="lim">lim</button>
+        </div>
+        <div class="d-flex">
+          <button class="m3-math-btn m3-math-group-b math-tb-btn" data-insert="pm" title="±">±</button>
+          <button class="m3-math-btn m3-math-group-b math-tb-btn" data-insert="infty" title="∞">∞</button>
+          <button class="m3-math-btn m3-math-group-b math-tb-btn" data-insert="cdot" title="·">·</button>
+        </div>
+      </div>
+      
+      <!-- Grupo D: Variables -->
+      <div class="d-inline-flex flex-column align-items-center me-2">
+        <div class="d-flex">
+          <button class="m3-math-btn m3-math-group-d math-tb-btn" data-insert="x" title="x">x</button>
+          <button class="m3-math-btn m3-math-group-d math-tb-btn" data-insert="y" title="y">y</button>
+        </div>
+        <div class="d-flex">
+          <button class="m3-math-btn m3-math-group-d math-tb-btn" data-insert="z" title="z">z</button>
+          <button class="m3-math-btn m3-math-group-b math-tb-btn" data-insert="pi" title="π">π</button>
+        </div>
+      </div>
+      
+      <!-- Funciones Trig/Log -->
+      <div class="d-inline-flex flex-column align-items-center me-2">
+        <div class="d-flex">
+          <button class="m3-math-btn m3-math-group-b math-tb-btn" data-insert="sin" title="sin">sin</button>
+          <button class="m3-math-btn m3-math-group-b math-tb-btn" data-insert="cos" title="cos">cos</button>
+          <button class="m3-math-btn m3-math-group-b math-tb-btn" data-insert="tan" title="tan">tan</button>
+        </div>
+        <div class="d-flex">
+          <button class="m3-math-btn m3-math-group-b math-tb-btn" data-insert="log" title="log">log</button>
+          <button class="m3-math-btn m3-math-group-b math-tb-btn" data-insert="ln" title="ln">ln</button>
+          <button class="m3-math-btn m3-math-group-b math-tb-btn" data-insert="equal" title="=">=</button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Grupo C: Griegas -->
+    <div class="mt-1 mb-2 ms-1">
+      <div style="font-size: 0.7rem; color: var(--md-sys-color-on-surface-variant, #49454F); margin-bottom: 2px;">Letras griegas</div>
+      <div class="d-flex flex-wrap">
+        <button class="m3-math-btn m3-math-group-c math-tb-btn" data-insert="alpha" title="α">α</button>
+        <button class="m3-math-btn m3-math-group-c math-tb-btn" data-insert="beta" title="β">β</button>
+        <button class="m3-math-btn m3-math-group-c math-tb-btn" data-insert="theta" title="θ">θ</button>
+        <button class="m3-math-btn m3-math-group-c math-tb-btn" data-insert="delta" title="δ">δ</button>
+        <button class="m3-math-btn m3-math-group-c math-tb-btn" data-insert="lambda" title="λ">λ</button>
+        <button class="m3-math-btn m3-math-group-c math-tb-btn" data-insert="sigma" title="σ">σ</button>
+      </div>
+    </div>
+    
+    <!-- Grupo E: Delimitadores -->
+    <div class="d-flex flex-wrap mb-2">
+      <button class="m3-math-btn m3-math-group-e math-tb-btn" data-insert="lparen" title="(">(</button>
+      <button class="m3-math-btn m3-math-group-e math-tb-btn" data-insert="rparen" title=")">)</button>
+      <button class="m3-math-btn m3-math-group-e math-tb-btn" data-insert="lbracket" title="[">[</button>
+      <button class="m3-math-btn m3-math-group-e math-tb-btn" data-insert="rbracket" title="]">]</button>
+      <button class="m3-math-btn m3-math-group-e math-tb-btn" data-insert="lbrace" title="{">{</button>
+      <button class="m3-math-btn m3-math-group-e math-tb-btn" data-insert="rbrace" title="}">}</button>
+    </div>
+  `;
 
+export function renderMathPanel() {
   const section = document.getElementById('mathSection');
   if (!section) return;
 
   section.innerHTML = `
     <div>
       <h2 class="fw-bold mb-3"><span class="material-symbols-rounded me-2 text-indigo">calculate</span>Matemáticas</h2>
-        <button class="math-subtab active" data-tab="calc"><span class="material-symbols-rounded me-1">calculate</span>Calculadora</button>
-        <button class="math-subtab" data-tab="algebra"><span class="material-symbols-rounded me-1">function</span>Álgebra</button>
-        <button class="math-subtab" data-tab="graph"><span class="material-symbols-rounded me-1">show_chart</span>Graficar</button>
+      
+      <!-- M3 Secondary Navigation Tabs -->
+      <div class="math-tabs-container">
+        <button class="math-subtab active" data-tab="calc"><span class="material-symbols-rounded me-2">calculate</span>Calculadora</button>
+        <button class="math-subtab" data-tab="algebra"><span class="material-symbols-rounded me-2">function</span>Álgebra</button>
+        <button class="math-subtab" data-tab="graph"><span class="material-symbols-rounded me-2">show_chart</span>Graficar</button>
       </div>
 
-      <div id="mathPanelCalc" class="math-panel"><div class="row g-4"><div class="col-md-7"><div class="card"><div class="card-body p-3">${renderCalcPanel()}</div></div></div><div class="col-md-5"><div class="card h-100"><div class="card-body"><h6 class="fw-semibold mb-3"><span class="material-symbols-rounded me-1">history</span>Historial</h6><div id="mathHistory"></div></div></div></div></div></div>
+      <div id="mathPanelCalc" class="math-panel"><div class="row g-4"><div class="col-md-7"><div class="card border-0 shadow-sm"><div class="card-body p-4">${renderCalcPanel()}</div></div></div><div class="col-md-5"><div class="card h-100 border-0 shadow-sm"><div class="card-body p-4"><h6 class="fw-semibold mb-3"><span class="material-symbols-rounded me-2">history</span>Historial</h6><div id="mathHistory"></div></div></div></div></div></div>
 
       <div id="mathPanelAlgebra" class="math-panel d-none">
-        <div class="card"><div class="card-body">
-          <div class="mb-2 d-flex gap-2 flex-wrap align-items-center">
-            <select class="form-select w-auto" id="algMode">
+        <div class="card border-0 shadow-sm"><div class="card-body p-4">
+          
+          <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+            <select class="form-select w-auto bg-light border-0 fw-bold" id="algMode" style="color: var(--primary-color);">
               <option value="solve">Resolver ecuación</option>
               <option value="simplify">Simplificar</option>
               <option value="expand">Expandir</option>
@@ -1570,14 +1743,20 @@ export function renderMathPanel() {
               <option value="integrate">Integrar</option>
               <option value="eval">Evaluar</option>
             </select>
-            <span id="wolframBadge" class="badge bg-info d-none" style="font-size:0.65rem;"><span class="material-symbols-rounded me-1">smart_toy</span>Wolfram</span>
-            <button class="btn btn-indigo" id="algBtn"><span class="material-symbols-rounded me-1">calculate</span>Calcular</button>
-            <button class="btn btn-outline-secondary btn-sm" id="algClearBtn" title="Limpiar"><span class="material-symbols-rounded">ink_eraser</span></button>
+            
+            <div class="d-flex gap-2 justify-content-end">
+              <button class="m3-math-btn m3-math-btn-pill m3-math-action-wolfram d-none" id="wolframBadge" style="height: 40px;"><span class="material-symbols-rounded me-1" style="font-size: 1.1rem;">smart_toy</span>Wolfram</button>
+              <button class="m3-math-btn m3-math-btn-pill m3-math-action-primary" id="algBtn" style="height: 40px;"><span class="material-symbols-rounded me-1" style="font-size: 1.1rem;">calculate</span>Calcular</button>
+              <button class="m3-math-btn m3-math-action-clear" id="algClearBtn" title="Limpiar" style="height: 40px; border-radius: 50%; padding: 0 10px;"><span class="material-symbols-rounded">ink_eraser</span></button>
+            </div>
           </div>
 
           <div class="mb-4">
-            <math-field id="algMathField" style="font-size: 1.5rem; width: 100%; border-radius: 0.5rem; border: 1px solid var(--bs-border-color); padding: 0.5rem; background: var(--bs-body-bg); color: var(--bs-body-color);">
-            </math-field>
+            <div style="position: relative; width: 100%;">
+              <div style="font-size: 0.75rem; color: var(--primary-color); position: absolute; top: -10px; left: 12px; background: var(--md-sys-color-surface, #FFFBFE); padding: 0 4px; z-index: 2;">Expresión algebraica</div>
+              <math-field id="algMathField" style="font-size: 1.5rem; width: 100%; border-radius: 8px; border: 2px solid var(--primary-color); padding: 0.75rem 1rem; background: transparent; color: var(--md-sys-color-on-surface, #1C1B1F); outline: none;">
+              </math-field>
+            </div>
           </div>
 
           ${MATH_TOOLBAR_HTML}
@@ -1594,13 +1773,16 @@ export function renderMathPanel() {
       </div>
 
       <div id="mathPanelGraph" class="math-panel d-none">
-        <div class="card"><div class="card-body">
-          <div class="input-group mb-2 d-flex flex-column flex-md-row gap-2">
-            <math-field id="graphInput" style="flex: 1; font-size: 1.5rem; width: 100%; border-radius: 0.5rem; border: 1px solid var(--bs-border-color); padding: 0.5rem; background: var(--bs-body-bg); color: var(--bs-body-color);">x^2</math-field>
-            <button class="btn btn-indigo" id="graphBtn" style="border-radius: 0.5rem;">Graficar</button>
+        <div class="card border-0 shadow-sm"><div class="card-body p-4">
+          <div class="input-group mb-3 d-flex flex-column flex-md-row gap-3 align-items-stretch">
+            <div style="flex: 1; position: relative; width: 100%;">
+              <div style="font-size: 0.75rem; color: var(--primary-color); position: absolute; top: -10px; left: 12px; background: var(--md-sys-color-surface, #FFFBFE); padding: 0 4px; z-index: 2;">Escribe una función (ej. x², sin(x), x³−2x)</div>
+              <math-field id="graphInput" style="font-size: 1.25rem; width: 100%; border-radius: 8px; border: 2px solid var(--primary-color); padding: 0.75rem 1rem; background: transparent; color: var(--md-sys-color-on-surface, #1C1B1F); outline: none;">x^2</math-field>
+            </div>
+            <button class="m3-math-btn m3-math-btn-pill m3-math-action-primary m-0" id="graphBtn" style="height: auto; min-height: 56px;"><span class="material-symbols-rounded me-2">show_chart</span>Graficar</button>
           </div>
           ${MATH_TOOLBAR_HTML}
-          <div style="position:relative;width:100%;background:var(--bs-tertiary-bg);border-radius:0.5rem;" class="mt-2">
+          <div style="position:relative;width:100%;background:var(--md-sys-color-surface, #FFFBFE);border: 1px solid var(--md-sys-color-outline, #79747E); border-radius:0.5rem;" class="mt-4">
             <canvas id="graphCanvas" style="width:100%;height:350px;display:block;border-radius:0.5rem;"></canvas>
           </div>
         </div></div>
@@ -1665,15 +1847,42 @@ function setupMathEvents() {
 function setupPhysicsEvents() {
   document.getElementById('physSelect')?.addEventListener('change', function () {
     const p = PHYSICS[this.value];
-    document.getElementById('physFormula').innerHTML = `\\(${p.formula}\\)`;
-    document.getElementById('physInputs').innerHTML = Object.entries(p.vars).map(([k, v]) =>
-      `<div class="col-sm-6"><label class="form-label small">${v} (<b>${k}</b>)</label><input type="number" class="form-control form-control-sm phys-input" data-var="${k}" placeholder="?" step="any" /></div>`
-    ).join('');
-    document.getElementById('physResult').textContent = '';
+    
+    // Update category badge and formula display
+    const badge = document.getElementById('physCategoryBadge');
+    if (badge) badge.textContent = p.category;
+    
+    const mathField = document.getElementById('physFormulaDisplay');
+    if (mathField) mathField.setValue(p.formula);
+    
+    // Render variables
+    document.getElementById('physInputs').innerHTML = Object.entries(p.vars).map(([k, v]) => {
+      const parts = v.match(/^(.*?)\\s*\\((.*?)\\)$/);
+      const name = parts ? parts[1] : v;
+      const unit = parts ? parts[2] : '';
+      return '<div class="col-12 col-md-6">' +
+          '<div style="position: relative; width: 100%;">' +
+            '<div style="font-size: 0.75rem; color: var(--md-sys-color-on-surface-variant, #49454F); position: absolute; top: -10px; left: 12px; background: var(--md-sys-color-surface, #FFFBFE); padding: 0 4px; z-index: 2;">' + name + ' (' + k + ')</div>' +
+            '<input type="number" class="form-control phys-input" data-var="' + k + '" style="border: 1px solid var(--md-sys-color-outline, #79747E); border-radius: 8px; padding: 12px; padding-right: 48px; background: transparent; color: var(--md-sys-color-on-surface, #1C1B1F);" placeholder="Dejar vacío para calcular" step="any" />' +
+            (unit ? '<span style="position: absolute; right: 16px; top: 12px; color: var(--md-sys-color-on-surface-variant, #49454F); font-size: 0.9rem;">' + unit + '</span>' : '') +
+          '</div>' +
+        '</div>';
+    }).join('');
+    
+    // Reset states
+    const resultDiv = document.getElementById('physResult');
+    if (resultDiv) resultDiv.innerHTML = '';
+    
     const stepsDiv = document.getElementById('physSteps');
-    if(stepsDiv) stepsDiv.classList.add('d-none');
-    if (window.renderMathInElement) window.renderMathInElement(document.getElementById('physFormula'));
+    if(stepsDiv) stepsDiv.innerHTML = '';
+    
+    const emptyState = document.getElementById('physEmptyState');
+    if (emptyState) emptyState.classList.remove('d-none');
+    
+    const resultContainer = document.getElementById('physResultContainer');
+    if (resultContainer) resultContainer.classList.add('d-none');
   });
+  
   document.getElementById('physBtn')?.addEventListener('click', doPhysics);
   document.getElementById('physNlpBtn')?.addEventListener('click', handlePhysicsNLP);
 }

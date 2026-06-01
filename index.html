@@ -13,13 +13,13 @@
   <script defer src="https://unpkg.com/mathlive"></script>
 </head>
 <body>
-  <header class="sticky-top" style="padding: 1rem; padding-bottom: 0;">
-    <nav class="navbar navbar-expand-lg px-3 gap-2 glass-modal">
-      <button class="btn btn-light rounded-circle p-2 d-flex align-items-center justify-content-center shadow-sm" id="sidebarToggle" type="button" aria-label="Toggle sidebar" data-bs-toggle="offcanvas" data-bs-target="#sidebarOffcanvas" style="width: 45px; height: 45px;">
-        <span class="material-symbols-rounded fs-5 text-indigo">history</span>
+  <header class="sticky-top bg-surface" style="padding: 0.5rem 1rem; border-bottom: 1px solid var(--md-sys-color-surface-container-highest, #E6E0E9);">
+    <nav class="navbar navbar-expand-lg px-2 gap-3" style="background: transparent;">
+      <button class="btn btn-icon d-flex align-items-center justify-content-center m3-icon-btn" id="sidebarToggle" type="button" aria-label="Toggle sidebar" data-bs-toggle="offcanvas" data-bs-target="#sidebarOffcanvas">
+        <span class="material-symbols-rounded fs-5 text-on-surface-variant">history</span>
       </button>
-      <a class="navbar-brand fw-bold text-indigo d-none d-sm-inline" href="#">
-        <span class="material-symbols-rounded">category</span> SolverX
+      <a class="navbar-brand fw-bold text-primary d-none d-sm-inline m-0" href="#">
+        <span class="material-symbols-rounded align-middle">category</span> SolverX
       </a>
 
       <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navSections" aria-controls="navSections" aria-expanded="false" aria-label="Toggle navigation">
@@ -27,42 +27,42 @@
       </button>
 
       <div class="collapse navbar-collapse" id="navSections">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-1 ms-lg-3">
           <li class="nav-item">
-            <button class="nav-link active section-tab" data-section="dictionary">
+            <button class="nav-link active section-tab m3-nav-pill" data-section="dictionary">
               <span class="material-symbols-rounded">menu_book</span> Diccionario
             </button>
           </li>
           <li class="nav-item">
-            <button class="nav-link section-tab" data-section="translate">
+            <button class="nav-link section-tab m3-nav-pill" data-section="translate">
               <span class="material-symbols-rounded">translate</span> Traductor
             </button>
           </li>
           <li class="nav-item">
-            <button class="nav-link section-tab" data-section="favorites">
+            <button class="nav-link section-tab m3-nav-pill" data-section="favorites">
               <span class="material-symbols-rounded">favorite_border</span> Favoritos
             </button>
           </li>
           <li class="nav-item">
-            <button class="nav-link section-tab" data-section="math">
+            <button class="nav-link section-tab m3-nav-pill" data-section="math">
               <span class="material-symbols-rounded">calculate</span> Matemáticas
             </button>
           </li>
           <li class="nav-item">
-            <button class="nav-link section-tab" data-section="physics">
+            <button class="nav-link section-tab m3-nav-pill" data-section="physics">
               <span class="material-symbols-rounded">rocket_launch</span> Física
             </button>
           </li>
           <li class="nav-item">
-            <button class="nav-link section-tab" data-section="chemistry">
+            <button class="nav-link section-tab m3-nav-pill" data-section="chemistry">
               <span class="material-symbols-rounded">science</span> Química
             </button>
           </li>
         </ul>
 
-            <div class="nav-item me-2 d-none d-md-flex align-items-center">
-              <button class="btn btn-outline-secondary btn-sm border-0 d-flex align-items-center" id="themeToggle" title="Cambiar tema">
-                <span class="material-symbols-rounded"id="themeIcon" style="font-variation-settings: 'FILL' 1;">dark_mode</span>
+        <div class="nav-item me-2 d-none d-md-flex align-items-center">
+          <button class="btn m3-icon-btn-outlined d-flex align-items-center justify-content-center" id="themeToggle" title="Cambiar tema">
+            <span class="material-symbols-rounded" id="themeIcon" style="font-variation-settings: 'FILL' 1;">dark_mode</span>
               </button>
             </div>
       </div>
@@ -123,7 +123,7 @@
 
   <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebarOffcanvas">
     <div class="offcanvas-header border-bottom">
-      <h5 class="offcanvas-title"><span class="material-symbols-rounded">category</span> SolverX</h5>
+      <h5 class="offcanvas-title fw-bold text-primary"><span class="material-symbols-rounded align-middle">category</span> SolverX</h5>
       <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
     </div>
     <div class="offcanvas-body" id="offcanvasSidebarContent"></div>
