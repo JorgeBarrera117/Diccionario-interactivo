@@ -1762,7 +1762,7 @@ export function renderMathPanel() {
           <div class="mb-4">
             <div style="position: relative; width: 100%;">
               <div style="font-size: 0.75rem; color: var(--primary-color); position: absolute; top: -10px; left: 12px; background: var(--md-sys-color-surface, #FFFBFE); padding: 0 4px; z-index: 2;">Expresión algebraica</div>
-              <math-field id="algMathField" style="font-size: 1.5rem; width: 100%; border-radius: 8px; border: 2px solid var(--primary-color); padding: 0.75rem 1rem; background: transparent; color: var(--md-sys-color-on-surface, #1C1B1F); outline: none;">
+              <math-field id="algMathField" math-virtual-keyboard-policy="manual" style="font-size: 1.5rem; width: 100%; border-radius: 8px; border: 2px solid var(--primary-color); padding: 0.75rem 1rem; background: transparent; color: var(--md-sys-color-on-surface, #1C1B1F); outline: none;">
               </math-field>
             </div>
           </div>
@@ -1785,7 +1785,7 @@ export function renderMathPanel() {
           <div class="input-group mb-3 d-flex flex-column flex-md-row gap-3 align-items-stretch">
             <div style="flex: 1; position: relative; width: 100%;">
               <div style="font-size: 0.75rem; color: var(--primary-color); position: absolute; top: -10px; left: 12px; background: var(--md-sys-color-surface, #FFFBFE); padding: 0 4px; z-index: 2;">Escribe una función (ej. x², sin(x), x³−2x)</div>
-              <math-field id="graphInput" style="font-size: 1.25rem; width: 100%; border-radius: 8px; border: 2px solid var(--primary-color); padding: 0.75rem 1rem; background: transparent; color: var(--md-sys-color-on-surface, #1C1B1F); outline: none;">x^2</math-field>
+              <math-field id="graphInput" math-virtual-keyboard-policy="manual" style="font-size: 1.25rem; width: 100%; border-radius: 8px; border: 2px solid var(--primary-color); padding: 0.75rem 1rem; background: transparent; color: var(--md-sys-color-on-surface, #1C1B1F); outline: none;">x^2</math-field>
             </div>
             <button class="m3-math-btn m3-math-btn-pill m3-math-action-primary m-0" id="graphBtn" style="height: auto; min-height: 56px;"><span class="material-symbols-rounded me-2">show_chart</span>Graficar</button>
           </div>
