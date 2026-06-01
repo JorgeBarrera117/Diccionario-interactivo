@@ -581,7 +581,7 @@ function renderWolframSteps(stepsPod, stepsContent, plotUrl) {
   if (plotUrl) {
     const plotDiv = document.createElement('div');
     plotDiv.className = 'step-item';
-    plotDiv.innerHTML = `<div class="step-head"><span class="step-badge"><i class="bi bi-graph-up"></i></span><span class="step-title">Gráfica</span></div><div class="step-body"><img src="${plotUrl}" alt="Gráfica" style="max-width:100%;height:auto;border-radius:4px;" /></div>`;
+    plotDiv.innerHTML = `<div class="step-head"><span class="step-badge"><span class="material-symbols-rounded">show_chart</span></span><span class="step-title">Gráfica</span></div><div class="step-body"><img src="${plotUrl}" alt="Gráfica" style="max-width:100%;height:auto;border-radius:4px;" /></div>`;
     stepsContent.appendChild(plotDiv);
   }
 }
@@ -651,7 +651,7 @@ async function doAlgebra() {
       <div class="d-flex flex-column gap-3 align-items-start align-items-md-center flex-md-row justify-content-between">
         <span style="word-break: break-all;">${display}</span>
         <button class="btn btn-indigo shadow-sm px-4 py-2 fw-semibold text-nowrap rounded-pill mt-2 mt-md-0" id="btnGraphResult" style="transition: transform 0.2s, box-shadow 0.2s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.1)'" onmouseout="this.style.transform='none'; this.style.boxShadow='none'">
-          <i class="bi bi-graph-up me-1"></i> Graficar Respuesta
+          <span class="material-symbols-rounded me-1">show_chart</span> Graficar Respuesta
         </button>
       </div>
     `;
@@ -703,7 +703,7 @@ async function doAlgebra() {
 }
 
 function insertMathSymbol(symbol) {
-  const mfId = currentTab === 'alg' ? 'algMathField' : (currentTab === 'graph' ? 'graphInput' : null);
+  const mfId = currentTab === 'algebra' ? 'algMathField' : (currentTab === 'graph' ? 'graphInput' : null);
   if (!mfId) return;
   const mf = document.getElementById(mfId);
   if (!mf) return;
@@ -1116,7 +1116,7 @@ function doPhysics() {
         ]}
       ];
 
-      stepsDiv.innerHTML = '<h6 class="fw-semibold mb-2 step-section-title"><i class="bi bi-list-ol me-1 text-indigo"></i>Paso a paso</h6>';
+      stepsDiv.innerHTML = '<h6 class="fw-semibold mb-2 step-section-title"><span class="material-symbols-rounded me-1 text-indigo">format_list_numbered</span>Paso a paso</h6>';
       const container = document.createElement('div');
       container.className = 'steps-container';
       stepsData.forEach(s => container.appendChild(renderStep(s)));
@@ -1266,7 +1266,7 @@ function renderPhysicsPanel() {
   return `
     <div class="card mb-4 border-primary border-opacity-25 bg-primary bg-opacity-10 shadow-sm">
       <div class="card-body">
-        <h6 class="fw-bold text-primary mb-2"><i class="bi bi-magic me-2"></i>Lector de Problemas Mágico</h6>
+        <h6 class="fw-bold text-primary mb-2"><span class="material-symbols-rounded me-2">auto_awesome</span>Lector de Problemas Mágico</h6>
         <p class="text-body-secondary small mb-2">Escribe tu problema de física tal como viene en tu tarea. El sistema extraerá los datos y seleccionará la fórmula por ti.</p>
         <textarea class="form-control mb-2" id="physTextInput" rows="2" placeholder="Ej: Un auto parte del reposo y acelera a 4 m/s2 durante 10 segundos, calcula la velocidad final..."></textarea>
         <button class="btn btn-primary btn-sm px-4 fw-semibold rounded-pill" id="physNlpBtn">
@@ -1289,51 +1289,6 @@ function renderPhysicsPanel() {
     <div class="math-result-display mt-3" id="physResult"></div>`;
 }
 
-export function renderMathPanel() {
-  const MATH_TOOLBAR_HTML = `
-          <div class="math-toolbar mb-1">
-            <button class="math-tb-btn" data-insert="sqrt" title="\\sqrt{}"><span class="tb-latex">\\sqrt{}</span></button>
-            <button class="math-tb-btn" data-insert="square" title="^{2}">x<sup>2</sup></button>
-            <button class="math-tb-btn" data-insert="cube" title="^{3}">x<sup>3</sup></button>
-            <button class="math-tb-btn" data-insert="power" title="^{}">x<sup>n</sup></button>
-            <button class="math-tb-btn" data-insert="frac" title="\\frac{}{}"><span class="tb-frac"><span class="tb-frac-n">a</span><span class="tb-frac-bar"></span><span class="tb-frac-d">b</span></span></button>
-            <button class="math-tb-btn" data-insert="binom" title="\\binom{}{}"><span class="tb-frac"><span class="tb-frac-n">n</span><span class="tb-frac-p">(</span><span class="tb-frac-d">k</span></span></button>
-            <button class="math-tb-btn" data-insert="sum" title="\\sum_{}^{}">∑</button>
-            <button class="math-tb-btn" data-insert="int" title="\\int_{}^{}">∫</button>
-            <button class="math-tb-btn" data-insert="lim" title="\\lim_{}">lim</button>
-            <span class="math-tb-sep"></span>
-            <button class="math-tb-btn" data-insert="pi" title="\\pi">π</button>
-            <button class="math-tb-btn" data-insert="infty" title="\\infty">∞</button>
-            <button class="math-tb-btn" data-insert="pm" title="\\pm">±</button>
-            <button class="math-tb-btn" data-insert="cdot" title="\\cdot">·</button>
-            <span class="math-tb-sep"></span>
-            <button class="math-tb-btn fw-bold fst-italic" data-insert="x" title="x">x</button>
-            <button class="math-tb-btn fw-bold fst-italic" data-insert="y" title="y">y</button>
-            <button class="math-tb-btn fw-bold fst-italic" data-insert="z" title="z">z</button>
-          </div>
-          <div class="math-toolbar mb-2">
-            <button class="math-tb-btn" data-insert="sin" title="\\sin{}">sin</button>
-            <button class="math-tb-btn" data-insert="cos" title="\\cos{}">cos</button>
-            <button class="math-tb-btn" data-insert="tan" title="\\tan{}">tan</button>
-            <button class="math-tb-btn" data-insert="log" title="\\log{}">log</button>
-            <button class="math-tb-btn" data-insert="ln" title="\\ln{}">ln</button>
-            <span class="math-tb-sep"></span>
-            <button class="math-tb-btn" data-insert="alpha" title="\\alpha">α</button>
-            <button class="math-tb-btn" data-insert="beta" title="\\beta">β</button>
-            <button class="math-tb-btn" data-insert="theta" title="\\theta">θ</button>
-            <button class="math-tb-btn" data-insert="delta" title="\\delta">δ</button>
-            <button class="math-tb-btn" data-insert="lambda" title="\\lambda">λ</button>
-            <button class="math-tb-btn" data-insert="sigma" title="\\sigma">σ</button>
-            <span class="math-tb-sep"></span>
-            <button class="math-tb-btn" data-insert="lparen" title="(">(</button>
-            <button class="math-tb-btn" data-insert="rparen" title=")">)</button>
-            <button class="math-tb-btn" data-insert="lbracket" title="[">[</button>
-            <button class="math-tb-btn" data-insert="rbracket" title="]">]</button>
-            <button class="math-tb-btn" data-insert="lbrace" title="{">{</button>
-            <button class="math-tb-btn" data-insert="rbrace" title="}">}</button>
-            <button class="math-tb-btn" data-insert="equal" title="=">=</button>
-          </div>`;
-
 const PERIODIC_TABLE = {
   H: 1.008, He: 4.0026, Li: 6.94, Be: 9.0122, B: 10.81, C: 12.011, N: 14.007, O: 15.999, F: 18.998,
   Ne: 20.180, Na: 22.990, Mg: 24.305, Al: 26.982, Si: 28.085, P: 30.974, S: 32.06, Cl: 35.45,
@@ -1347,6 +1302,65 @@ const PERIODIC_TABLE = {
   W: 183.84, Re: 186.21, Os: 190.23, Ir: 192.22, Pt: 195.08, Au: 196.97, Hg: 200.59, Tl: 204.38,
   Pb: 207.2, Bi: 208.98, Po: 209, At: 210, Rn: 222, Fr: 223, Ra: 226, Ac: 227, Th: 232.04, Pa: 231.04, U: 238.03
 };
+
+const COMMON_CHEM_NAMES = {
+  "agua": "H2O",
+  "sal": "NaCl",
+  "sal de mesa": "NaCl",
+  "glucosa": "C6H12O6",
+  "azucar": "C12H22O11",
+  "azúcar": "C12H22O11",
+  "sacarosa": "C12H22O11",
+  "aspirina": "C9H8O4",
+  "bicarbonato": "NaHCO3",
+  "amoniaco": "NH3",
+  "amoniaco líquido": "NH3",
+  "metano": "CH4",
+  "dioxido de carbono": "CO2",
+  "dióxido de carbono": "CO2",
+  "monoxido de carbono": "CO",
+  "monóxido de carbono": "CO",
+  "acido sulfurico": "H2SO4",
+  "ácido sulfúrico": "H2SO4",
+  "acido clorhidrico": "HCl",
+  "ácido clorhídrico": "HCl",
+  "sosa caustica": "NaOH",
+  "sosa cáustica": "NaOH",
+  "hidroxido de sodio": "NaOH",
+  "hidróxido de sodio": "NaOH",
+  "etanol": "C2H5OH",
+  "alcohol": "C2H5OH",
+  "peroxido de hidrogeno": "H2O2",
+  "peróxido de hidrógeno": "H2O2",
+  "agua oxigenada": "H2O2",
+  "ozono": "O3",
+  "yeso": "CaSO4*2H2O",
+  "dos hidrogenos y un oxigeno": "H2O",
+  "dos hidrógenos y un oxígeno": "H2O",
+  "un carbono y dos oxigenos": "CO2",
+  "un carbono y dos oxígenos": "CO2"
+};
+
+function formatSubscripts(formula) {
+  const map = { '0':'₀','1':'₁','2':'₂','3':'₃','4':'₄','5':'₅','6':'₆','7':'▷','8':'₈','9':'₉' };
+  // Quick fix for the character 7 -> ₇
+  map['7'] = '₇';
+  return formula.replace(/[0-9]/g, m => map[m]);
+}
+
+function resolveChemFormula(input) {
+  let cleanInput = input.trim().toLowerCase();
+  if (COMMON_CHEM_NAMES[cleanInput]) {
+    return COMMON_CHEM_NAMES[cleanInput];
+  }
+  // Remove spaces for standard formulas
+  let formula = input.replace(/\s+/g, '');
+  // Capitalize first letter of elements properly if typed in lowercase (basic heuristic for h2o -> H2O)
+  if (/^[a-z0-9]+$/.test(formula)) {
+    formula = formula.replace(/[a-z]+/g, m => m.charAt(0).toUpperCase() + m.slice(1));
+  }
+  return formula;
+}
 
 function parseChemicalFormula(formula) {
   let [mainPart, hydratePart] = formula.split(/\*|\./); 
@@ -1410,61 +1424,75 @@ function renderChemistryPanel() {
   return `
     <div class="row g-4">
       <div class="col-md-6">
-        <div class="card h-100">
-          <div class="card-body">
-            <h5 class="card-title fw-bold text-indigo"><i class="bi bi-heptagon me-2"></i>Masa Molar</h5>
-            <div class="input-group mb-3 mt-3">
-              <input type="text" id="chemFormulaInput" class="form-control" placeholder="Fórmula (ej. C6H12O6, CuSO4*5H2O)">
-              <button class="btn btn-indigo" id="chemMolarBtn">Calcular</button>
-            </div>
-            <div id="chemMolarResult" class="p-3 bg-body-tertiary rounded">Introduce una fórmula para ver su masa molar.</div>
+        <div class="card h-100 border-0 shadow-sm" style="background: linear-gradient(145deg, #f8f9fa, #ffffff);">
+          <div class="card-body p-4">
+            <h5 class="card-title fw-bold text-indigo mb-3"><span class="material-symbols-rounded me-2 align-text-bottom">science</span>¿De qué está hecho este compuesto?</h5>
             
-            <hr class="my-4">
-            <h6 class="fw-bold"><i class="bi bi-arrow-left-right me-2"></i>Conversor Moles ↔ Gramos</h6>
-            <div class="row g-2 align-items-center">
-              <div class="col-sm-4">
-                <label class="small text-secondary">Masa Molar (g/mol)</label>
-                <input type="number" id="chemConvMolarMass" class="form-control form-control-sm" step="any" placeholder="Masa">
+            <div class="mb-4">
+              <input type="text" id="chemFormulaInput" class="form-control form-control-lg border-2" placeholder="Ej: H2O, glucosa, sal..." style="font-size: 1.25rem;">
+              <small class="text-secondary mt-2 d-block">Prueba: agua · sal · glucosa · aspirina</small>
+              <div id="chemFormulaError" class="invalid-feedback"></div>
+            </div>
+            
+            <button class="btn btn-indigo btn-lg w-100 fw-bold shadow-sm" id="chemMolarBtn" style="border-radius: 0.5rem;">Calcular</button>
+            
+            <div id="chemMolarResultContainer" class="mt-4 p-4 rounded d-none" style="background: rgba(102, 16, 242, 0.1); border-left: 4px solid var(--bs-indigo); transition: opacity 0.3s ease;">
+              <div id="chemMolarResult" class="fs-4 fw-bold text-indigo mb-2"></div>
+              <div id="chemMolarBreakdown" class="text-body-secondary" style="font-size: 1.1rem; line-height: 1.6;"></div>
+            </div>
+            
+            <hr class="my-5 opacity-25">
+            
+            <h5 class="fw-bold text-indigo mb-4"><span class="material-symbols-rounded me-2 align-text-bottom">swap_horiz</span>¿Cuánto pesa o cuántos moles tengo?</h5>
+            
+            <div class="row g-3 align-items-center mb-4">
+              <div class="col-12 col-sm-4">
+                <label class="fw-semibold text-secondary mb-1">Masa Molar (g/mol)</label>
+                <input type="number" id="chemConvMolarMass" class="form-control form-control-lg" step="any" placeholder="Masa" style="min-height: 48px;">
               </div>
-              <div class="col-sm-4">
-                <label class="small text-secondary">Gramos (g)</label>
-                <input type="number" id="chemConvGrams" class="form-control form-control-sm" step="any" placeholder="g">
+              <div class="col-12 col-sm-4">
+                <label class="fw-semibold text-secondary mb-1">Gramos (g)</label>
+                <input type="number" id="chemConvGrams" class="form-control form-control-lg" step="any" placeholder="g" style="min-height: 48px;">
               </div>
-              <div class="col-sm-4">
-                <label class="small text-secondary">Moles (mol)</label>
-                <input type="number" id="chemConvMoles" class="form-control form-control-sm" step="any" placeholder="mol">
+              <div class="col-12 col-sm-4">
+                <label class="fw-semibold text-secondary mb-1">Moles (mol)</label>
+                <input type="number" id="chemConvMoles" class="form-control form-control-lg" step="any" placeholder="mol" style="min-height: 48px;">
               </div>
             </div>
-            <div class="mt-2 text-center text-secondary small" id="chemConvHelper">Llena 2 campos para calcular el 3ro automáticamente.</div>
+            
+            <div class="text-center p-3 rounded" style="background: var(--bs-gray-200);">
+              <span id="chemConvResult" class="fs-3 fw-bold text-indigo">—</span>
+            </div>
+            <div class="mt-2 text-center text-secondary small" id="chemConvHelper">Llena 2 campos para calcular el tercero automáticamente.</div>
           </div>
         </div>
       </div>
       
       <div class="col-md-6">
-        <div class="card h-100">
-          <div class="card-body">
-            <h5 class="card-title fw-bold text-indigo"><i class="bi bi-wind me-2"></i>Gases Ideales (PV = nRT)</h5>
-            <p class="small text-secondary mb-3">Deja un campo vacío para despejarlo. (R = 0.08206 L·atm/(mol·K))</p>
-            <div class="row g-3">
+        <div class="card h-100 border-0 shadow-sm">
+          <div class="card-body p-4">
+            <h5 class="card-title fw-bold text-indigo mb-3"><span class="material-symbols-rounded me-2 align-text-bottom">air</span>Gases Ideales (PV = nRT)</h5>
+            <p class="text-secondary mb-4">Deja un campo vacío para despejarlo. (R = 0.08206 L·atm/(mol·K))</p>
+            <div class="row g-3 mb-4">
               <div class="col-6">
-                <label class="form-label small">Presión (P) [atm]</label>
-                <input type="number" id="chemGasP" class="form-control" step="any" placeholder="?">
+                <label class="fw-semibold text-secondary mb-1">Presión (P) [atm]</label>
+                <input type="number" id="chemGasP" class="form-control form-control-lg" step="any" placeholder="?">
               </div>
               <div class="col-6">
-                <label class="form-label small">Volumen (V) [L]</label>
-                <input type="number" id="chemGasV" class="form-control" step="any" placeholder="?">
+                <label class="fw-semibold text-secondary mb-1">Volumen (V) [L]</label>
+                <input type="number" id="chemGasV" class="form-control form-control-lg" step="any" placeholder="?">
               </div>
               <div class="col-6">
-                <label class="form-label small">Moles (n) [mol]</label>
-                <input type="number" id="chemGasn" class="form-control" step="any" placeholder="?">
+                <label class="fw-semibold text-secondary mb-1">Moles (n) [mol]</label>
+                <input type="number" id="chemGasn" class="form-control form-control-lg" step="any" placeholder="?">
               </div>
               <div class="col-6">
-                <label class="form-label small">Temp (T) [K]</label>
-                <input type="number" id="chemGasT" class="form-control" step="any" placeholder="?">
+                <label class="fw-semibold text-secondary mb-1">Temp (T) [K]</label>
+                <input type="number" id="chemGasT" class="form-control form-control-lg" step="any" placeholder="?">
               </div>
             </div>
-            <button class="btn btn-indigo w-100 mt-3" id="chemGasBtn">Resolver Ecuación</button>
-            <div id="chemGasResult" class="mt-3 p-3 bg-body-tertiary rounded text-center" style="min-height:60px;">Introduce datos y haz clic en Resolver.</div>
+            <button class="btn btn-indigo btn-lg w-100 fw-bold mb-3 shadow-sm" id="chemGasBtn" style="border-radius: 0.5rem;">Resolver Ecuación</button>
+            <div id="chemGasResult" class="p-4 bg-body-tertiary rounded text-center fs-4 text-indigo fw-bold" style="min-height:80px; transition: opacity 0.3s ease;">—</div>
           </div>
         </div>
       </div>
@@ -1472,21 +1500,63 @@ function renderChemistryPanel() {
   `;
 }
 
+export function renderMathPanel() {
+  const MATH_TOOLBAR_HTML = `
+          <div class="math-toolbar mb-1">
+            <button class="math-tb-btn" data-insert="sqrt" title="\\sqrt{}"><span class="tb-latex">\\sqrt{}</span></button>
+            <button class="math-tb-btn" data-insert="square" title="^{2}">x<sup>2</sup></button>
+            <button class="math-tb-btn" data-insert="cube" title="^{3}">x<sup>3</sup></button>
+            <button class="math-tb-btn" data-insert="power" title="^{}">x<sup>n</sup></button>
+            <button class="math-tb-btn" data-insert="frac" title="\\frac{}{}"><span class="tb-frac"><span class="tb-frac-n">a</span><span class="tb-frac-bar"></span><span class="tb-frac-d">b</span></span></button>
+            <button class="math-tb-btn" data-insert="binom" title="\\binom{}{}"><span class="tb-frac"><span class="tb-frac-n">n</span><span class="tb-frac-p">(</span><span class="tb-frac-d">k</span></span></button>
+            <button class="math-tb-btn" data-insert="sum" title="\\sum_{}^{}">∑</button>
+            <button class="math-tb-btn" data-insert="int" title="\\int_{}^{}">∫</button>
+            <button class="math-tb-btn" data-insert="lim" title="\\lim_{}">lim</button>
+            <span class="math-tb-sep"></span>
+            <button class="math-tb-btn" data-insert="pi" title="\\pi">π</button>
+            <button class="math-tb-btn" data-insert="infty" title="\\infty">∞</button>
+            <button class="math-tb-btn" data-insert="pm" title="\\pm">±</button>
+            <button class="math-tb-btn" data-insert="cdot" title="\\cdot">·</button>
+            <span class="math-tb-sep"></span>
+            <button class="math-tb-btn fw-bold fst-italic" data-insert="x" title="x">x</button>
+            <button class="math-tb-btn fw-bold fst-italic" data-insert="y" title="y">y</button>
+            <button class="math-tb-btn fw-bold fst-italic" data-insert="z" title="z">z</button>
+          </div>
+          <div class="math-toolbar mb-2">
+            <button class="math-tb-btn" data-insert="sin" title="\\sin{}">sin</button>
+            <button class="math-tb-btn" data-insert="cos" title="\\cos{}">cos</button>
+            <button class="math-tb-btn" data-insert="tan" title="\\tan{}">tan</button>
+            <button class="math-tb-btn" data-insert="log" title="\\log{}">log</button>
+            <button class="math-tb-btn" data-insert="ln" title="\\ln{}">ln</button>
+            <span class="math-tb-sep"></span>
+            <button class="math-tb-btn" data-insert="alpha" title="\\alpha">α</button>
+            <button class="math-tb-btn" data-insert="beta" title="\\beta">β</button>
+            <button class="math-tb-btn" data-insert="theta" title="\\theta">θ</button>
+            <button class="math-tb-btn" data-insert="delta" title="\\delta">δ</button>
+            <button class="math-tb-btn" data-insert="lambda" title="\\lambda">λ</button>
+            <button class="math-tb-btn" data-insert="sigma" title="\\sigma">σ</button>
+            <span class="math-tb-sep"></span>
+            <button class="math-tb-btn" data-insert="lparen" title="(">(</button>
+            <button class="math-tb-btn" data-insert="rparen" title=")">)</button>
+            <button class="math-tb-btn" data-insert="lbracket" title="[">[</button>
+            <button class="math-tb-btn" data-insert="rbracket" title="]">]</button>
+            <button class="math-tb-btn" data-insert="lbrace" title="{">{</button>
+            <button class="math-tb-btn" data-insert="rbrace" title="}">}</button>
+            <button class="math-tb-btn" data-insert="equal" title="=">=</button>
+          </div>`;
+
   const section = document.getElementById('mathSection');
   if (!section) return;
 
   section.innerHTML = `
     <div>
-      <h2 class="fw-bold mb-3"><i class="bi bi-calculator me-2 text-indigo"></i>Matemáticas</h2>
-      <ul class="nav nav-tabs mb-4">
-        <li class="nav-item"><button class="nav-link math-subtab active" data-tab="calc">Calculadora</button></li>
-        <li class="nav-item"><button class="nav-link math-subtab" data-tab="algebra">Álgebra</button></li>
-        <li class="nav-item"><button class="nav-link math-subtab" data-tab="graph">Graficar</button></li>
-        <li class="nav-item"><button class="nav-link math-subtab" data-tab="physics">Física</button></li>
-        <li class="nav-item"><button class="nav-link math-subtab" data-tab="chemistry">Química</button></li>
-      </ul>
+      <h2 class="fw-bold mb-3"><span class="material-symbols-rounded me-2 text-indigo">calculate</span>Matemáticas</h2>
+        <button class="math-subtab active" data-tab="calc"><span class="material-symbols-rounded me-1">calculate</span>Calculadora</button>
+        <button class="math-subtab" data-tab="algebra"><span class="material-symbols-rounded me-1">function</span>Álgebra</button>
+        <button class="math-subtab" data-tab="graph"><span class="material-symbols-rounded me-1">show_chart</span>Graficar</button>
+      </div>
 
-      <div id="mathPanelCalc" class="math-panel"><div class="row g-4"><div class="col-md-7"><div class="card"><div class="card-body p-3">${renderCalcPanel()}</div></div></div><div class="col-md-5"><div class="card h-100"><div class="card-body"><h6 class="fw-semibold mb-3"><i class="bi bi-clock-history me-1"></i>Historial</h6><div id="mathHistory"></div></div></div></div></div></div>
+      <div id="mathPanelCalc" class="math-panel"><div class="row g-4"><div class="col-md-7"><div class="card"><div class="card-body p-3">${renderCalcPanel()}</div></div></div><div class="col-md-5"><div class="card h-100"><div class="card-body"><h6 class="fw-semibold mb-3"><span class="material-symbols-rounded me-1">history</span>Historial</h6><div id="mathHistory"></div></div></div></div></div></div>
 
       <div id="mathPanelAlgebra" class="math-panel d-none">
         <div class="card"><div class="card-body">
@@ -1500,9 +1570,9 @@ function renderChemistryPanel() {
               <option value="integrate">Integrar</option>
               <option value="eval">Evaluar</option>
             </select>
-            <span id="wolframBadge" class="badge bg-info d-none" style="font-size:0.65rem;"><i class="bi bi-robot me-1"></i>Wolfram</span>
-            <button class="btn btn-indigo" id="algBtn"><i class="bi bi-calculator me-1"></i>Calcular</button>
-            <button class="btn btn-outline-secondary btn-sm" id="algClearBtn" title="Limpiar"><i class="bi bi-eraser"></i></button>
+            <span id="wolframBadge" class="badge bg-info d-none" style="font-size:0.65rem;"><span class="material-symbols-rounded me-1">smart_toy</span>Wolfram</span>
+            <button class="btn btn-indigo" id="algBtn"><span class="material-symbols-rounded me-1">calculate</span>Calcular</button>
+            <button class="btn btn-outline-secondary btn-sm" id="algClearBtn" title="Limpiar"><span class="material-symbols-rounded">ink_eraser</span></button>
           </div>
 
           <div class="mb-4">
@@ -1515,7 +1585,7 @@ function renderChemistryPanel() {
           <div class="small text-body-secondary mb-2 mt-3" id="algHelp">${ALG_EXAMPLES.solve}</div>
 
           <div id="algSteps" class="d-none mt-3">
-            <h6 class="fw-semibold mb-2 step-section-title"><i class="bi bi-list-ol me-1 text-indigo"></i>Paso a paso</h6>
+            <h6 class="fw-semibold mb-2 step-section-title"><span class="material-symbols-rounded me-1 text-indigo">format_list_numbered</span>Paso a paso</h6>
             <div id="algStepsContent"></div>
           </div>
 
@@ -1534,16 +1604,6 @@ function renderChemistryPanel() {
             <canvas id="graphCanvas" style="width:100%;height:350px;display:block;border-radius:0.5rem;"></canvas>
           </div>
         </div></div>
-      </div>
-
-      <div id="mathPanelPhysics" class="math-panel d-none">
-        <div class="card"><div class="card-body">
-          ${renderPhysicsPanel()}
-        </div></div>
-      </div>
-
-      <div id="mathPanelChemistry" class="math-panel d-none">
-        ${renderChemistryPanel()}
       </div>
     </div>
   `;
@@ -1600,7 +1660,9 @@ function setupMathEvents() {
   });
   document.getElementById('graphBtn')?.addEventListener('click', drawGraph);
   document.getElementById('graphInput')?.addEventListener('keydown', e => { if (e.key === 'Enter') drawGraph(); });
+}
 
+function setupPhysicsEvents() {
   document.getElementById('physSelect')?.addEventListener('change', function () {
     const p = PHYSICS[this.value];
     document.getElementById('physFormula').innerHTML = `\\(${p.formula}\\)`;
@@ -1614,59 +1676,113 @@ function setupMathEvents() {
   });
   document.getElementById('physBtn')?.addEventListener('click', doPhysics);
   document.getElementById('physNlpBtn')?.addEventListener('click', handlePhysicsNLP);
+}
 
-  // Eventos de Química
+function setupChemistryEvents() {
   document.getElementById('chemMolarBtn')?.addEventListener('click', () => {
-    const formula = document.getElementById('chemFormulaInput').value.trim();
+    const inputEl = document.getElementById('chemFormulaInput');
+    const errorEl = document.getElementById('chemFormulaError');
+    const resultContainer = document.getElementById('chemMolarResultContainer');
     const resultDiv = document.getElementById('chemMolarResult');
-    if (!formula) return;
+    const breakdownDiv = document.getElementById('chemMolarBreakdown');
+    
+    inputEl.classList.remove('is-invalid');
+    errorEl.textContent = '';
+    
+    const rawInput = inputEl.value.trim();
+    if (!rawInput) return;
+    
+    const formula = resolveChemFormula(rawInput);
+    
     try {
       const parsed = parseChemicalFormula(formula);
-      let totalMass = 0;
-      let steps = [];
-      for (const [elem, count] of Object.entries(parsed)) {
-         const mass = PERIODIC_TABLE[elem];
-         if (!mass) throw new Error(`Elemento desconocido: ${elem}`);
-         const subtotal = mass * count;
-         totalMass += subtotal;
-         steps.push(`${elem}: ${count} \\times ${mass} = ${subtotal.toFixed(3)}`);
+      
+      let mm = 0;
+      let textBreakdown = [];
+      
+      const elementsMap = {
+        H: 'hidrógenos', He: 'helios', Li: 'litios', Be: 'berilios', B: 'boros', C: 'carbonos', N: 'nitrógenos', O: 'oxígenos', F: 'flúores',
+        Na: 'sodios', Mg: 'magnesios', Al: 'aluminios', Si: 'silicios', P: 'fósforos', S: 'azufres', Cl: 'cloros', K: 'potasios', Ca: 'calcios',
+        Fe: 'hierros', Cu: 'cobres', Zn: 'zinc', Ag: 'platas', Au: 'oros', Hg: 'mercurios', Pb: 'plomos', U: 'uranios'
+      };
+      
+      let unknownElement = null;
+      
+      for (const k in parsed) {
+        if (!PERIODIC_TABLE[k]) {
+          unknownElement = k;
+          break;
+        }
+        const w = parsed[k] * PERIODIC_TABLE[k];
+        mm += w;
+        
+        let elName = elementsMap[k] || k;
+        if (parsed[k] === 1 && elName.endsWith('s') && elName !== 'fósforos') elName = elName.slice(0, -1);
+        if (parsed[k] === 1 && k === 'P') elName = 'fósforo';
+        if (parsed[k] === 1 && k === 'F') elName = 'flúor';
+        
+        textBreakdown.push(`<b>${parsed[k]}</b> ${elName} (${PERIODIC_TABLE[k]} c/u)`);
       }
-      resultDiv.innerHTML = `
-        <div class="mb-2"><strong>Masa Molar:</strong> ${totalMass.toFixed(3)} g/mol</div>
-        <div class="text-secondary small">\\(\\begin{aligned}${steps.join('\\\\')}\\end{aligned}\\)</div>
-      `;
-      const massInput = document.getElementById('chemConvMolarMass');
-      if(massInput) massInput.value = totalMass.toFixed(3);
-      if (window.renderMathInElement) window.renderMathInElement(resultDiv);
-    } catch(e) {
-      resultDiv.innerHTML = `<span class="text-danger">${e.message}</span>`;
+      
+      if (unknownElement) {
+        throw new Error(`Elemento no reconocido: ${unknownElement}`);
+      }
+      
+      const prettyFormula = formatSubscripts(formula);
+      const isCommonName = rawInput.toLowerCase() !== formula.toLowerCase() && COMMON_CHEM_NAMES[rawInput.toLowerCase()];
+      const displayName = isCommonName ? `${rawInput} (${prettyFormula})` : prettyFormula;
+      
+      resultDiv.innerHTML = `El ${displayName} pesa <span class="text-primary">${mm.toFixed(3)} g</span> por cada mol`;
+      breakdownDiv.innerHTML = textBreakdown.join(' <br> <span class="text-muted">+</span> ');
+      
+      resultContainer.classList.remove('d-none');
+      resultContainer.style.opacity = '0';
+      setTimeout(() => resultContainer.style.opacity = '1', 50);
+      
+      // Auto-fill converter
+      const convMolarMass = document.getElementById('chemConvMolarMass');
+      if (convMolarMass) {
+        convMolarMass.value = mm.toFixed(3);
+        document.getElementById('chemConvMolarMass').dispatchEvent(new Event('input'));
+      }
+      
+    } catch (e) {
+      resultContainer.classList.add('d-none');
+      inputEl.classList.add('is-invalid');
+      errorEl.textContent = 'No reconozco esa fórmula. Prueba con H2O o escribe el nombre del compuesto.';
     }
   });
-  document.getElementById('chemFormulaInput')?.addEventListener('keydown', e => {
-    if(e.key === 'Enter') document.getElementById('chemMolarBtn').click();
-  });
 
-  const convInputs = ['chemConvMolarMass', 'chemConvGrams', 'chemConvMoles'].map(id => document.getElementById(id));
-  convInputs.forEach(input => {
-    input?.addEventListener('input', () => {
-      const m = parseFloat(convInputs[0].value);
-      const g = parseFloat(convInputs[1].value);
-      const n = parseFloat(convInputs[2].value);
-      
-      let changed = false;
-      if (!isNaN(m) && !isNaN(g) && isNaN(n) && input !== convInputs[2]) {
-        convInputs[2].value = (g / m).toFixed(4); changed = true;
-      } else if (!isNaN(m) && !isNaN(n) && isNaN(g) && input !== convInputs[1]) {
-        convInputs[1].value = (m * n).toFixed(4); changed = true;
-      } else if (!isNaN(g) && !isNaN(n) && isNaN(m) && input !== convInputs[0]) {
-        convInputs[0].value = (g / n).toFixed(4); changed = true;
-      }
-      
-      if(changed) {
-        document.getElementById('chemConvHelper').textContent = 'Calculado automáticamente.';
-        setTimeout(() => { document.getElementById('chemConvHelper').textContent = 'Llena 2 campos para calcular el 3ro automáticamente.'; }, 3000);
-      }
-    });
+  const calcConv = () => {
+    const mmInput = document.getElementById('chemConvMolarMass');
+    const gInput = document.getElementById('chemConvGrams');
+    const nInput = document.getElementById('chemConvMoles');
+    const res = document.getElementById('chemConvResult');
+    
+    if (!mmInput || !gInput || !nInput) return;
+    
+    const mm = parseFloat(mmInput.value);
+    const g = parseFloat(gInput.value);
+    const n = parseFloat(nInput.value);
+    
+    let resultText = "—";
+    
+    if (!isNaN(mm) && !isNaN(g) && isNaN(n)) {
+      resultText = `Tienes ${(g/mm).toFixed(4)} moles`;
+    } else if (!isNaN(mm) && isNaN(g) && !isNaN(n)) {
+      resultText = `Pesa ${(n*mm).toFixed(4)} gramos`;
+    } else if (isNaN(mm) && !isNaN(g) && !isNaN(n)) {
+      resultText = `Masa Molar: ${(g/n).toFixed(4)} g/mol`;
+    }
+    
+    res.textContent = resultText;
+  };
+  document.getElementById('chemConvMolarMass')?.addEventListener('input', calcConv);
+  document.getElementById('chemConvGrams')?.addEventListener('input', calcConv);
+  document.getElementById('chemConvMoles')?.addEventListener('input', calcConv);
+
+  document.getElementById('chemFormulaInput')?.addEventListener('keydown', e => {
+    if (e.key === 'Enter') document.getElementById('chemMolarBtn').click();
   });
 
   document.getElementById('chemGasBtn')?.addEventListener('click', () => {
@@ -1700,8 +1816,36 @@ function setupMathEvents() {
       const calc = (P * V) / (n * R);
       resText = `T = \\frac{PV}{nR} = \\frac{(${P})(${V})}{(${n})(${R})} = ${calc.toFixed(4)} \\text{ K}`;
     }
-    
-    resultDiv.innerHTML = `\\(${resText}\\)`;
-    if (window.renderMathInElement) window.renderMathInElement(resultDiv);
+    const resEl = document.getElementById('chemGasResult');
+    resEl.innerHTML = `\\(${resText}\\)`;
+    resEl.style.opacity = '0';
+    setTimeout(() => resEl.style.opacity = '1', 50);
+    if (window.renderMathInElement) window.renderMathInElement(resEl);
   });
+}
+
+export function renderPhysicsSection() {
+  const section = document.getElementById('physicsSection');
+  if (!section) return;
+  section.innerHTML = `
+    <div>
+      <h2 class="fw-bold mb-3"><span class="material-symbols-rounded me-2 text-indigo">rocket_launch</span>Física</h2>
+      <div class="card"><div class="card-body">
+        ${renderPhysicsPanel()}
+      </div></div>
+    </div>
+  `;
+  setupPhysicsEvents();
+}
+
+export function renderChemistrySection() {
+  const section = document.getElementById('chemistrySection');
+  if (!section) return;
+  section.innerHTML = `
+    <div>
+      <h2 class="fw-bold mb-3"><span class="material-symbols-rounded me-2 text-indigo">science</span>Química</h2>
+      ${renderChemistryPanel()}
+    </div>
+  `;
+  setupChemistryEvents();
 }

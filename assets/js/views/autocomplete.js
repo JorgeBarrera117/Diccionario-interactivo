@@ -25,6 +25,9 @@ export function initAutocomplete() {
   dropdown.className = 'autocomplete-dropdown';
   container.appendChild(dropdown);
 
+  let debounceTimer;
+  let currentQueryId = 0;
+
   input.addEventListener('input', function () {
     const query = this.value.trim();
     if (query.length < 1) {
@@ -34,10 +37,29 @@ export function initAutocomplete() {
       selectedIndex = -1;
       return;
     }
+    
+    clearTimeout(debounceTimer);
     const lang = getState().language;
+    
+    // Resultados locales inmediatos
     currentResults = getSuggestions(query, lang);
     selectedIndex = -1;
     renderDropdown(dropdown, currentResults, query);
+
+    debounceTimer = setTimeout(async () => {
+      const queryId = ++currentQueryId;
+      try {
+        const res = await fetch(`https://${lang}.wikipedia.org/w/api.php?action=opensearch&search=${encodeURIComponent(query)}&limit=10&format=json&origin=*`);
+        const data = await res.json();
+        if (queryId !== currentQueryId) return; // Ignorar respuestas tardías
+        if (data && data[1]) {
+          const apiSuggestions = data[1].map(s => s.toLowerCase());
+          currentResults = [...new Set([...currentResults, ...apiSuggestions])].slice(0, 10);
+          selectedIndex = -1;
+          renderDropdown(dropdown, currentResults, query);
+        }
+      } catch (err) {}
+    }, 300);
   });
 
   input.addEventListener('keydown', function (e) {

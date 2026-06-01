@@ -33,24 +33,24 @@ function renderHTML(state, dailyWord, dailyDef) {
   html += `<span class="fs-4 fw-bold" style="color:#6366f1;">${escapeHtml(dailyWord)}</span>`;
   html += `<p class="mt-1 mb-0 text-body-secondary small">${escapeHtml(dailyDef)}</p>`;
   html += '</div>';
-  html += `<button class="fav-btn ${wodFav ? 'active' : ''}" data-word="${escapeHtml(dailyWord)}" style="font-size:1.5rem;"><i class="bi bi-heart${wodFav ? '-fill' : ''}"></i></button>`;
+  html += `<button class="fav-btn ${wodFav ? 'active' : ''}" data-word="${escapeHtml(dailyWord)}" style="font-size:1.5rem;"><span class="material-symbols-rounded${wodFav ? '-fill' : ''}">favorite_border</span></button>`;
   html += '</div>';
 
   html += '<div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">';
-  html += '<h2 class="fw-bold mb-0 fs-4"><i class="bi bi-heart-fill text-danger me-2"></i>Mis Favoritos</h2>';
+  html += '<h2 class="fw-bold mb-0 fs-4"><span class="material-symbols-rounded text-danger me-2" style="font-variation-settings: \\\'FILL\\\' 1;">favorite</span>Mis Favoritos</h2>';
   html += `<span class="badge bg-secondary">${state.favorites.length} palabra${state.favorites.length !== 1 ? 's' : ''}</span>`;
   html += '</div>';
 
   html += `<div class="mb-3">
     <div class="search-bar" style="border-radius:0.5rem;padding:0.2rem 0.2rem 0.2rem 1rem;">
-      <i class="bi bi-search search-icon"></i>
+      <span class="material-symbols-rounded search-icon">search</span>
       <input type="text" id="favSearchInput" class="search-input" placeholder="Buscar en favoritos..." value="${escapeHtml(currentFilter)}" style="font-size:0.9rem;padding:0.4rem 0.5rem;" />
-      ${currentFilter ? `<button class="btn btn-sm btn-outline-secondary border-0" id="clearFavFilter" aria-label="Limpiar filtro"><i class="bi bi-x"></i></button>` : ''}
+      ${currentFilter ? `<button class="btn btn-sm btn-outline-secondary border-0" id="clearFavFilter" aria-label="Limpiar filtro"><span class="material-symbols-rounded">close</span></button>` : ''}
     </div>
   </div>`;
 
   if (filtered.length === 0) {
-    html += '<p class="text-body-secondary">' + (currentFilter ? 'No hay favoritos que coincidan con tu búsqueda.' : 'No tienes favoritos aún. Busca palabras y haz clic en el <i class="bi bi-heart"></i> para guardarlas aquí.') + '</p>';
+    html += '<p class="text-body-secondary">' + (currentFilter ? 'No hay favoritos que coincidan con tu búsqueda.' : 'No tienes favoritos aún. Busca palabras y haz clic en el <span class="material-symbols-rounded">favorite_border</span> para guardarlas aquí.') + '</p>';
   } else {
     html += '<div class="row g-3">';
     for (const word of filtered) {
@@ -58,7 +58,7 @@ function renderHTML(state, dailyWord, dailyDef) {
       html += '<div class="card meaning-card h-100">';
       html += '<div class="card-body d-flex align-items-center justify-content-between">';
       html += `<button class="sidebar-word-btn fs-5 fw-medium" data-word="${escapeHtml(word)}">${escapeHtml(word)}</button>`;
-      html += `<button class="remove-fav-btn" data-word="${escapeHtml(word)}" aria-label="Eliminar favorito"><i class="bi bi-x-lg"></i></button>`;
+      html += `<button class="remove-fav-btn" data-word="${escapeHtml(word)}" aria-label="Eliminar favorito"><span class="material-symbols-rounded-lg">close</span></button>`;
       html += '</div></div></div>';
     }
     html += '</div>';

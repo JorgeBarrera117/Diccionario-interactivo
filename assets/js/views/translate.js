@@ -26,7 +26,7 @@ export function renderTranslatePanel() {
           <select id="sourceLang">${buildLangOptions('en')}</select>
         </div>
         <button class="btn swap-btn" id="swapLangBtn" title="Intercambiar idiomas">
-          <i class="bi bi-arrow-left-right"></i>
+          <span class="material-symbols-rounded">swap_horiz</span>
         </button>
         <div class="translate-lang-select">
           <select id="targetLang">${buildLangOptions('es')}</select>

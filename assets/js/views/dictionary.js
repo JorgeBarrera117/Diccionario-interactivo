@@ -76,7 +76,7 @@ export function renderWordResult(entry, isFavorite, lang, imgUrl) {
   html += '</div><div class="ms-auto d-flex align-items-center gap-2">';
   html += renderPronunciation(entry.phonetics || []);
   html += `<button class="fav-btn ${isFavorite ? 'active' : ''}" data-word="${escapeHtml(entry.word)}">
-    <i class="bi bi-heart${isFavorite ? '-fill' : ''}"></i>
+    <span class="material-symbols-rounded${isFavorite ? '-fill' : ''}">favorite_border</span>
   </button>`;
   html += '</div></div>';
 
@@ -86,7 +86,7 @@ export function renderWordResult(entry, isFavorite, lang, imgUrl) {
   html += '<div class="col-md-5 col-lg-4">';
   if (imgUrl) {
     html += `<div class="word-image-container sticky-md-top" style="top:1rem;">
-      <img src="${escapeHtml(imgUrl)}" alt="${escapeHtml(entry.word)}" class="word-image" loading="lazy" />
+      <img src="${escapeHtml(imgUrl)}" alt="${escapeHtml(entry.word)}" class="word-image" loading="lazy" onerror="this.parentElement.style.display='none';" />
     </div>`;
   }
   html += '</div><div class="col-md-7 col-lg-8">';

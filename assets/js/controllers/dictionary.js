@@ -21,8 +21,7 @@ export async function searchWord(word) {
 
   try {
     const entry = await fetchDictionary(word, lang);
-    const context = entry?.meanings?.[0]?.definitions?.[0]?.definition || word;
-    const imgUrl = await fetchImage(word, context);
+    const imgUrl = await fetchImage(word, lang);
     hideLoading();
     renderWordResult(entry, getState().favorites.includes(entry?.word ?? ''), lang, imgUrl);
   } catch (err) {

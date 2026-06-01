@@ -14,7 +14,7 @@ export function renderSidebar(containerId, state) {
     for (const word of state.favorites) {
       html += `<li class="d-flex align-items-center justify-content-between fav-item">
         <button class="sidebar-word-btn" data-word="${escapeHtml(word)}">${escapeHtml(word)}</button>
-        <button class="remove-fav-btn" data-word="${escapeHtml(word)}"><i class="bi bi-x"></i></button>
+        <button class="remove-fav-btn" data-word="${escapeHtml(word)}"><span class="material-symbols-rounded">close</span></button>
       </li>`;
     }
     html += '</ul>';
@@ -43,6 +43,5 @@ export function renderSidebar(containerId, state) {
 }
 
 export function updateSidebars(state) {
-  renderSidebar('sidebarContent', state);
   renderSidebar('offcanvasSidebarContent', state);
 }

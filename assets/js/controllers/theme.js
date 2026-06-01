@@ -14,8 +14,8 @@ export function handleToggleTheme() {
 }
 
 function updateThemeIcon(theme) {
-  const icon = document.querySelector('#themeToggle i');
+  const icon = document.querySelector('#themeIcon');
   if (icon) {
-    icon.className = theme === 'dark' ? 'bi bi-sun-fill fs-5' : 'bi bi-moon-fill fs-5';
+    icon.textContent = theme === 'dark' ? 'light_mode' : 'dark_mode';
   }
 }

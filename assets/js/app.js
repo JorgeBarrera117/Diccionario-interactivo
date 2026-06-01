@@ -4,7 +4,7 @@ import { initTheme, handleToggleTheme } from './controllers/theme.js';
 import { updateSidebars } from './views/sidebar.js';
 import { renderTranslatePanel } from './views/translate.js';
 import { renderFavorites } from './views/favorites.js';
-import { renderMathPanel } from './views/math.js';
+import { renderMathPanel, renderPhysicsSection, renderChemistrySection } from './views/math.js';
 import { initAutocomplete } from './views/autocomplete.js';
 
 let currentSection = 'dictionary';
@@ -14,7 +14,7 @@ async function setActiveSection(section) {
   document.querySelectorAll('.section-tab').forEach(tab => {
     tab.classList.toggle('active', tab.dataset.section === section);
   });
-  const sections = ['dictionary', 'translate', 'favorites', 'math'];
+  const sections = ['dictionary', 'translate', 'favorites', 'math', 'physics', 'chemistry'];
   sections.forEach(s => {
     const el = document.getElementById(s + 'Section');
     if (s === section) {
@@ -132,11 +132,19 @@ function setupEventListeners(offcanvas) {
       if (getState().favorites.includes(word)) {
         removeFavorite(word);
         btn.classList.remove('active');
-        btn.querySelector('i').className = 'bi bi-heart';
+        const icon = btn.querySelector('span');
+        if (icon) {
+          icon.textContent = 'favorite_border';
+          icon.style.fontVariationSettings = "'FILL' 0";
+        }
       } else {
         addFavorite(word);
         btn.classList.add('active');
-        btn.querySelector('i').className = 'bi bi-heart-fill';
+        const icon = btn.querySelector('span');
+        if (icon) {
+          icon.textContent = 'favorite';
+          icon.style.fontVariationSettings = "'FILL' 1";
+        }
       }
       return;
     }
@@ -182,7 +190,7 @@ function init() {
 
   const offcanvasEl = document.getElementById('sidebarOffcanvas');
   const offcanvas = new bootstrap.Offcanvas(offcanvasEl);
-  document.getElementById('sidebarToggle').addEventListener('click', () => offcanvas.toggle());
+
 
   updateLangUI(getState().language);
   setupEventListeners(offcanvas);
@@ -195,8 +203,11 @@ function init() {
   });
 
   loadWordOfDay();
+  renderFavorites(getState());
   renderTranslatePanel();
   renderMathPanel();
+  renderPhysicsSection();
+  renderChemistrySection();
   updateSidebars(getState());
 }
 

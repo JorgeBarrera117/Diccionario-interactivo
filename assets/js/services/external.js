@@ -64,24 +64,22 @@ function keyTerms(word, context) {
   return [...new Set(terms)].slice(0, 4).join(' ');
 }
 
-export async function fetchImage(word, context) {
-  const query = keyTerms(word, context) || word;
+export async function fetchImage(word, lang = 'es') {
   const enc = encodeURIComponent;
 
   try {
     const data = await fetchJson(
-      `https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrsearch=${enc(query)}&gsrnamespace=6&prop=imageinfo&iiprop=url&iiurlwidth=400&format=json&origin=*&gsrlimit=5`
+      `https://${lang}.wikipedia.org/w/api.php?action=query&titles=${enc(word)}&redirects=1&prop=pageimages&pithumbsize=400&format=json&origin=*`
     );
     const pages = data?.query?.pages;
     if (pages) {
       for (const p of Object.values(pages)) {
-        if (p?.imageinfo?.[0]?.thumburl) return p.imageinfo[0].thumburl;
-        if (p?.imageinfo?.[0]?.url) return p.imageinfo[0].url;
+        if (p?.thumbnail?.source) return p.thumbnail.source;
       }
     }
   } catch {}
 
-  return `https://image.pollinations.ai/prompt/${enc(query)}?width=400&height=300&nologo=true`;
+  return `https://image.pollinations.ai/prompt/${enc(word)}?width=400&height=300&nologo=true`;
 }
 
 export async function fetchDictionary(word, lang) {
